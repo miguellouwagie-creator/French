@@ -1,54 +1,105 @@
 "use client";
 import { useState, useEffect, useCallback } from 'react';
 
-const VOCAB_DECK = [
+// --- DATA: MAZO DE SUPERVIVENCIA A1 (30 CARTAS) ---
+const SURVIVAL_DECK = [
+    // SALUDOS & BÁSICOS
     { id: '1', emoji: '👋', french: 'Bonjour, ça va?', meaning: 'Hola, ¿qué tal?', type: 'phrase' },
-    { id: '2', emoji: '☕', french: 'Un café, s\'il vous plaît.', meaning: 'Un café, por favor.', type: 'phrase' },
-    { id: '3', emoji: '🐶', french: 'Le chien court.', meaning: 'El perro corre.', type: 'vocab' },
-    { id: '4', emoji: '🥐', french: 'Je voudrais un croissant.', meaning: 'Quisiera un croissant.', type: 'phrase' }
+    { id: '2', emoji: '🌙', french: 'Bonne soirée', meaning: 'Que tengas buena noche', type: 'phrase' },
+    { id: '3', emoji: '🙏', french: 'Merci beaucoup', meaning: 'Muchas gracias', type: 'phrase' },
+    { id: '4', emoji: '🤷', french: 'Je ne comprends pas', meaning: 'No entiendo', type: 'phrase' },
+    { id: '5', emoji: '🐌', french: 'Plus lentement, s\'il vous plaît', meaning: 'Más despacio, por favor', type: 'phrase' },
+
+    // COMIDA & BEBIDA
+    { id: '6', emoji: '☕', french: 'Un café, s\'il vous plaît', meaning: 'Un café, por favor', type: 'phrase' },
+    { id: '7', emoji: '🥐', french: 'Je voudrais un croissant', meaning: 'Quisiera un croissant', type: 'phrase' },
+    { id: '8', emoji: '💳', french: 'L\'addition, s\'il vous plaît', meaning: 'La cuenta, por favor', type: 'phrase' },
+    { id: '9', emoji: '💧', french: 'Une carafe d\'eau', meaning: 'Una jarra de agua (gratis)', type: 'phrase' },
+    { id: '10', emoji: '🍷', french: 'Un verre de vin rouge', meaning: 'Una copa de vino tinto', type: 'phrase' },
+
+    // DIRECCIONES
+    { id: '11', emoji: '📍', french: 'Où sont les toilettes ?', meaning: '¿Dónde está el baño?', type: 'phrase' },
+    { id: '12', emoji: '🚇', french: 'Je cherche le métro', meaning: 'Busco el metro', type: 'phrase' },
+    { id: '13', emoji: '➡️', french: 'C\'est à droite', meaning: 'Está a la derecha', type: 'phrase' },
+    { id: '14', emoji: '⬅️', french: 'C\'est à gauche', meaning: 'Está a la izquierda', type: 'phrase' },
+
+    // VOCABULARIO DE IMPACTO
+    { id: '15', emoji: '🏠', french: 'La maison', meaning: 'La casa', type: 'vocab' },
+    { id: '16', emoji: '🚗', french: 'La voiture', meaning: 'El coche', type: 'vocab' },
+    { id: '17', emoji: '🧀', french: 'Le fromage', meaning: 'El queso', type: 'vocab' },
+    { id: '18', emoji: '🥖', french: 'Le pain', meaning: 'El pan', type: 'vocab' },
+    { id: '19', emoji: '🕰️', french: 'Quelle heure est-il ?', meaning: '¿Qué hora es?', type: 'phrase' },
+    { id: '20', emoji: '💶', french: 'C\'est combien ?', meaning: '¿Cuánto cuesta?', type: 'phrase' },
+
+    // EMERGENCIAS / SOCIAL
+    { id: '21', emoji: '🚑', french: 'Aidez-moi !', meaning: '¡Ayúdenme!', type: 'phrase' },
+    { id: '22', emoji: '💊', french: 'J\'ai besoin d\'un médecin', meaning: 'Necesito un médico', type: 'phrase' },
+    { id: '23', emoji: '🇪🇸', french: 'Parlez-vous espagnol ?', meaning: '¿Habla español?', type: 'phrase' },
+    { id: '24', emoji: '🍺', french: 'Santé !', meaning: '¡Salud! (Brindis)', type: 'phrase' },
+    { id: '25', emoji: '👋', french: 'Au revoir', meaning: 'Adiós', type: 'phrase' },
+    { id: '26', emoji: '🚆', french: 'Le train part quand ?', meaning: '¿Cuándo sale el tren?', type: 'phrase' },
+    { id: '27', emoji: '🏨', french: 'J\'ai une réservation', meaning: 'Tengo una reserva', type: 'phrase' },
+    { id: '28', emoji: '🗝️', french: 'La clé', meaning: 'La llave', type: 'vocab' },
+    { id: '29', emoji: '🌧️', french: 'Il pleut', meaning: 'Está lloviendo', type: 'vocab' },
+    { id: '30', emoji: '❤️', french: 'J\'adore ça', meaning: 'Me encanta esto', type: 'phrase' }
 ];
 
+// Algoritmo de mezcla aleatoria (Fisher-Yates)
+const shuffleArray = (array: any[]) => {
+    const newArr = [...array];
+    for (let i = newArr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+    }
+    return newArr;
+};
+
 export default function PhoneticDojo() {
+    const [deck, setDeck] = useState(SURVIVAL_DECK);
     const [index, setIndex] = useState(0);
     const [showTranslation, setShowTranslation] = useState(false);
     const [isSpeaking, setIsSpeaking] = useState(false);
-
-    // ESTADO PARA LAS VOCES
     const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
     const [selectedVoice, setSelectedVoice] = useState<SpeechSynthesisVoice | null>(null);
 
-    const card = VOCAB_DECK[index];
+    // Mezclar cartas al inicio
+    useEffect(() => {
+        setDeck(shuffleArray(SURVIVAL_DECK));
+    }, []);
 
-    // FUNCIÓN DE CARGA MANUAL (El Rescate)
+    const card = deck[index];
+
     const loadVoices = useCallback(() => {
         const allVoices = window.speechSynthesis.getVoices();
-        console.log("Voces encontradas:", allVoices.length); // Debug en consola
-
         if (allVoices.length > 0) {
-            setVoices(allVoices);
+            // Ordenar: FR primero
+            const sorted = [...allVoices].sort((a, b) => {
+                const aFr = a.lang.includes('fr');
+                const bFr = b.lang.includes('fr');
+                if (aFr && !bFr) return -1;
+                if (!aFr && bFr) return 1;
+                return 0;
+            });
+            setVoices(sorted);
 
-            // Intentar seleccionar francés
-            const frenchVoice = allVoices.find(v =>
-                v.name.includes('French') || v.lang.includes('fr')
+            // Auto-selección inteligente
+            const bestVoice = sorted.find(v =>
+                (v.lang.includes('fr') && v.name.includes('Thomas')) ||
+                (v.lang.includes('fr') && v.name.includes('Siri')) ||
+                (v.lang.includes('fr') && v.name.includes('Premium')) ||
+                v.lang.includes('fr-FR')
             );
 
-            if (frenchVoice) {
-                setSelectedVoice(frenchVoice);
-            } else {
-                // Si hay voces pero ninguna francesa, seleccionar la primera
-                if (!selectedVoice) setSelectedVoice(allVoices[0]);
-            }
+            if (bestVoice && !selectedVoice) setSelectedVoice(bestVoice);
+            else if (!selectedVoice && sorted.length > 0) setSelectedVoice(sorted[0]);
         }
     }, [selectedVoice]);
 
-    // Intentar cargar al inicio
     useEffect(() => {
         loadVoices();
         window.speechSynthesis.onvoiceschanged = loadVoices;
-
-        // Re-intentar a los 500ms por si el navegador es lento
-        const timer = setTimeout(loadVoices, 500);
-        return () => clearTimeout(timer);
+        const interval = setInterval(loadVoices, 1000);
+        return () => clearInterval(interval);
     }, [loadVoices]);
 
     const speakFrench = (text: string) => {
@@ -56,10 +107,13 @@ export default function PhoneticDojo() {
             window.speechSynthesis.cancel();
             const utterance = new SpeechSynthesisUtterance(text);
 
-            if (selectedVoice) utterance.voice = selectedVoice;
-
-            utterance.lang = selectedVoice?.lang || 'fr-FR';
-            utterance.rate = 0.8;
+            if (selectedVoice) {
+                utterance.voice = selectedVoice;
+                utterance.lang = selectedVoice.lang;
+            } else {
+                utterance.lang = 'fr-FR';
+            }
+            utterance.rate = 0.85;
 
             utterance.onstart = () => setIsSpeaking(true);
             utterance.onend = () => setIsSpeaking(false);
@@ -71,83 +125,77 @@ export default function PhoneticDojo() {
 
     const nextCard = () => {
         setShowTranslation(false);
-        setIndex((prev) => (prev + 1) % VOCAB_DECK.length);
+        // Avanzar infinito circular
+        setIndex((prev) => (prev + 1) % deck.length);
     };
 
     return (
         <div className="flex flex-col h-full items-center justify-between p-6 pb-safe bg-brand-bg text-brand-text overflow-y-auto">
 
-            {/* --- SELECTOR DE VOZ CON BOTÓN DE FUERZA --- */}
-            <div className="w-full mb-4 bg-brand-surface p-3 rounded-lg border border-slate-700 shadow-md">
-                <div className="flex justify-between items-center mb-2">
-                    <label className="text-[10px] text-brand-muted uppercase font-bold">
-                        Configuración de Voz ({voices.length})
-                    </label>
-                    {/* BOTÓN DE RECARGA MANUAL */}
-                    <button
-                        onClick={loadVoices}
-                        className="text-xs bg-slate-700 hover:bg-slate-600 px-2 py-1 rounded text-white transition-colors"
-                    >
-                        🔄 Recargar
-                    </button>
+            {/* HEADER: Selector de Voz + Contador */}
+            <div className="w-full mb-4 space-y-2">
+                <div className="flex justify-between items-center text-[10px] text-brand-muted uppercase tracking-widest">
+                    <span>Survival A1</span>
+                    <span>{index + 1} / {deck.length}</span>
                 </div>
 
                 <div className="flex gap-2">
                     <select
-                        className="w-full bg-slate-900 text-xs text-white p-3 rounded border border-slate-600 focus:border-brand-primary outline-none"
+                        className="w-full bg-slate-800 text-xs text-white p-2 rounded-lg border border-slate-700 outline-none"
                         onChange={(e) => {
                             const voice = voices.find(v => v.name === e.target.value);
                             if (voice) setSelectedVoice(voice);
                         }}
                         value={selectedVoice?.name || ""}
                     >
+                        {voices.length === 0 && <option>Cargando voces...</option>}
                         {voices.map((v, i) => (
-                            // Usamos el índice 'i' como respaldo para asegurar que sea 100% único
                             <option key={`${v.name}-${v.lang}-${i}`} value={v.name}>
-                                {v.lang.toUpperCase()} - {v.name.slice(0, 30)}...
+                                {v.lang.includes('fr') ? '🇫🇷' : '🌍'} {v.name.slice(0, 25)}
                             </option>
                         ))}
                     </select>
+                    <button
+                        onClick={loadVoices}
+                        className="text-lg bg-brand-surface border border-slate-700 rounded-lg px-3"
+                    >
+                        🔄
+                    </button>
                 </div>
-
-                {/* Aviso si no hay voces francesas */}
-                {voices.length > 0 && !voices.some(v => v.lang.includes('fr')) && (
-                    <p className="text-[10px] text-amber-400 mt-2 font-bold bg-amber-900/30 p-2 rounded">
-                        ⚠ No veo voces FRANCESAS. <br />
-                        1. Instala el idioma Francés en Windows. <br />
-                        2. Reinicia el navegador.
-                    </p>
-                )}
             </div>
 
-            {/* TARJETA PRINCIPAL */}
-            <div className="flex-1 flex flex-col items-center justify-center gap-6 w-full max-w-sm">
-                <div className="text-9xl drop-shadow-2xl cursor-pointer active:scale-95 transition-transform" onClick={() => speakFrench(card.french)}>
+            {/* TARJETA VISUAL */}
+            <div className="flex-1 flex flex-col items-center justify-center gap-6 w-full max-w-sm min-h-[50vh]">
+                <div
+                    className="text-8xl drop-shadow-2xl cursor-pointer active:scale-90 transition-transform duration-200 select-none"
+                    onClick={() => speakFrench(card.french)}
+                >
                     {card.emoji}
                 </div>
 
-                <div className="text-center space-y-4">
-                    <h2 className="text-3xl font-serif font-bold text-brand-text leading-tight">
+                <div className="text-center space-y-4 w-full">
+                    <h2 className="text-3xl font-serif font-bold text-brand-text leading-tight min-h-[4rem] flex items-center justify-center select-none">
                         {card.french}
                     </h2>
 
                     <button
                         onClick={() => speakFrench(card.french)}
                         disabled={isSpeaking}
-                        className={`px-6 py-3 rounded-full border border-brand-primary/50 text-brand-primary font-bold text-sm flex items-center gap-2 mx-auto hover:bg-brand-primary/20 transition-all ${isSpeaking ? 'opacity-50' : ''}`}
+                        className={`px-8 py-3 rounded-full border border-brand-primary/50 text-brand-primary font-bold text-sm flex items-center gap-3 mx-auto hover:bg-brand-primary/20 active:bg-brand-primary/40 transition-all ${isSpeaking ? 'opacity-50 scale-95' : ''}`}
                     >
-                        <span>{isSpeaking ? '🔊 ...' : '🔊 Escuchar'}</span>
+                        <span className="text-lg">🔊</span>
+                        <span>{isSpeaking ? 'Escuchando...' : 'Escuchar'}</span>
                     </button>
                 </div>
 
                 <div className={`transition-all duration-300 transform w-full ${showTranslation ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 h-0 overflow-hidden'}`}>
-                    <p className="text-brand-muted text-lg font-medium bg-brand-surface px-6 py-3 rounded-xl border border-slate-700 text-center shadow-inner">
-                        "{card.meaning}"
+                    <p className="text-brand-muted text-lg font-medium bg-brand-surface px-6 py-4 rounded-xl border border-slate-700 text-center shadow-lg">
+                        {card.meaning}
                     </p>
                 </div>
             </div>
 
-            {/* CONTROLES */}
+            {/* BOTONES DE ACCIÓN */}
             <div className="w-full space-y-3 pb-4 pt-4">
                 {!showTranslation ? (
                     <button
@@ -166,7 +214,7 @@ export default function PhoneticDojo() {
                         </button>
                         <button
                             onClick={nextCard}
-                            className="bg-brand-success text-brand-bg font-bold py-4 rounded-2xl shadow-[0_0_20px_rgba(34,197,94,0.4)] active:scale-95"
+                            className="bg-brand-success text-brand-bg font-bold py-4 rounded-2xl shadow-lg active:scale-95"
                         >
                             Fácil 🚀
                         </button>
