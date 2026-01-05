@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Volume2, RefreshCw } from 'lucide-react';
+import { ArrowLeft, Volume2, RefreshCw, AlertTriangle, Brain } from 'lucide-react';
 import Link from 'next/link';
 import { getTrackById, getDefaultTrack, type Track, type Card } from '../lib/data';
 
@@ -116,7 +116,11 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
         amber: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
         emerald: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
         rose: 'bg-rose-500/20 text-rose-400 border-rose-500/30',
+        fuchsia: 'bg-fuchsia-500/20 text-fuchsia-400 border-fuchsia-500/30',
     };
+
+    // Check if this is the phonetic lab
+    const isPhoneticLab = track.id === 'phonetic';
 
     if (!card) {
         return (
@@ -166,7 +170,7 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
                     <div className="mt-3 flex items-center gap-3">
                         <div className="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
                             <motion.div
-                                className="h-full bg-gradient-to-r from-cyan-400 to-cyan-500"
+                                className={`h-full ${isPhoneticLab ? 'bg-gradient-to-r from-fuchsia-400 to-fuchsia-500' : 'bg-gradient-to-r from-cyan-400 to-cyan-500'}`}
                                 initial={{ width: 0 }}
                                 animate={{ width: `${((index + 1) / deck.length) * 100}%` }}
                                 transition={{ duration: 0.3 }}
@@ -191,7 +195,7 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
                         onClick={handleCardTap}
                         className="relative w-full aspect-[3/4] cursor-pointer"
                     >
-                        <div className="glass-card-elevated rounded-[2rem] w-full h-full flex flex-col items-center justify-center p-6 relative overflow-hidden">
+                        <div className={`glass-card-elevated rounded-[2rem] w-full h-full flex flex-col items-center justify-center p-6 relative overflow-hidden ${isPhoneticLab ? 'border-fuchsia-500/30' : ''}`}>
 
                             {/* Emoji Watermark */}
                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -201,19 +205,56 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
                             </div>
 
                             {/* Content */}
-                            <div className="relative z-10 flex flex-col items-center justify-center h-full gap-5 w-full">
+                            <div className="relative z-10 flex flex-col items-center justify-center h-full gap-4 w-full">
 
                                 {/* Type Badge */}
-                                <div className="glass-pill rounded-full px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest text-cyan-400">
+                                <div className={`glass-pill rounded-full px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest ${isPhoneticLab ? 'text-fuchsia-400' : 'text-cyan-400'}`}>
                                     {card.type === 'phrase' ? 'Frase' :
                                         card.type === 'vocab' ? 'Vocabulario' :
-                                            card.type === 'verb' ? 'Verbo' : 'Conector'}
+                                            card.type === 'verb' ? 'Verbo' :
+                                                card.type === 'phonetic' ? 'Fonética' : 'Conector'}
                                 </div>
 
                                 {/* French Phrase - HUGE */}
                                 <h2 className="font-display text-4xl md:text-5xl font-semibold text-center leading-tight text-white px-2">
                                     {card.french}
                                 </h2>
+
+                                {/* === PHONETIC GUIDE (Only for Phonetic Lab cards) === */}
+                                {card.phoneticGuide && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className="w-full max-w-xs"
+                                    >
+                                        <div className="bg-fuchsia-500/10 border border-fuchsia-500/30 rounded-xl p-4">
+                                            {/* Phonetic Guide */}
+                                            <p className="text-center font-mono text-2xl font-bold text-fuchsia-300 mb-2">
+                                                [ {card.phoneticGuide} ]
+                                            </p>
+
+                                            {/* Trap Warning */}
+                                            {card.trap && (
+                                                <div className="flex items-start gap-2 mt-3 p-2 bg-amber-500/10 border border-amber-500/20 rounded-lg">
+                                                    <AlertTriangle className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
+                                                    <p className="text-xs text-amber-200/80">
+                                                        {card.trap}
+                                                    </p>
+                                                </div>
+                                            )}
+
+                                            {/* Mnemonic Tip */}
+                                            {card.mnemonic && (
+                                                <div className="flex items-start gap-2 mt-2 p-2 bg-cyan-500/10 border border-cyan-500/20 rounded-lg">
+                                                    <Brain className="w-4 h-4 text-cyan-400 flex-shrink-0 mt-0.5" />
+                                                    <p className="text-xs text-cyan-200/80">
+                                                        {card.mnemonic}
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </motion.div>
+                                )}
 
                                 {/* Speaker Button */}
                                 <motion.button
@@ -234,7 +275,7 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
                                     </span>
                                 </motion.button>
 
-                                {/* Translation (Revealed on Tap) */}
+                                {/* Translation (Revealed on Tap) - Only if NOT phonetic lab or if phonetic lab and tapped */}
                                 <AnimatePresence>
                                     {showTranslation && (
                                         <motion.div
@@ -252,7 +293,7 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
                                 </AnimatePresence>
 
                                 {/* Tap Hint */}
-                                {!showTranslation && (
+                                {!showTranslation && !card.phoneticGuide && (
                                     <motion.p
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
@@ -283,7 +324,7 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
                                 onClick={() => setShowTranslation(true)}
                                 className="w-full py-4 rounded-2xl border border-white/20 text-brand-muted font-medium hover:bg-white/5 transition-all"
                             >
-                                Mostrar Traducción 👁️
+                                {isPhoneticLab ? 'Mostrar Significado 🎯' : 'Mostrar Traducción 👁️'}
                             </motion.button>
                         </motion.div>
                     ) : (

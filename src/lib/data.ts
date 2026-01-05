@@ -8,7 +8,11 @@ export interface Card {
     emoji: string;
     french: string;
     meaning: string;
-    type: 'phrase' | 'vocab' | 'verb' | 'connector';
+    type: 'phrase' | 'vocab' | 'verb' | 'connector' | 'phonetic';
+    // Optional fields for Phonetic Lab
+    phoneticGuide?: string;  // e.g., "wa-ZO"
+    mnemonic?: string;       // e.g., "Piensa en 'Guasa' para la OI"
+    trap?: string;           // e.g., "La S final es muda"
 }
 
 export interface Track {
@@ -25,7 +29,6 @@ export interface Track {
 // TRACK 1: SURVIVAL A1 (Original Deck)
 // =====================================================
 const SURVIVAL_DECK: Card[] = [
-    // SALUDOS & BÁSICOS
     { id: 'surv-1', emoji: '👋', french: 'Bonjour, ça va?', meaning: 'Hola, ¿qué tal?', type: 'phrase' },
     { id: 'surv-2', emoji: '🌙', french: 'Bonne soirée', meaning: 'Que tengas buena noche', type: 'phrase' },
     { id: 'surv-3', emoji: '🙏', french: 'Merci beaucoup', meaning: 'Muchas gracias', type: 'phrase' },
@@ -113,6 +116,112 @@ const GLUE_DECK: Card[] = [
 ];
 
 // =====================================================
+// TRACK 6: PHONETIC LAB (Complex Pronunciation)
+// =====================================================
+const PHONETIC_DECK: Card[] = [
+    {
+        id: 'phon-1',
+        emoji: '🐦',
+        french: 'Oiseau',
+        meaning: 'Pájaro',
+        type: 'phonetic',
+        phoneticGuide: 'wa-ZO',
+        trap: 'Todas las vocales cambian: OI→wa, EAU→o',
+        mnemonic: 'Piensa en "guaso" pero con W'
+    },
+    {
+        id: 'phon-2',
+        emoji: '🍷',
+        french: 'Bordeaux',
+        meaning: 'Burdeos (ciudad)',
+        type: 'phonetic',
+        phoneticGuide: 'Bor-DÓ',
+        trap: 'EAU siempre suena O',
+        mnemonic: 'El vino de BorDÓ'
+    },
+    {
+        id: 'phon-3',
+        emoji: '🎩',
+        french: 'Monsieur',
+        meaning: 'Señor',
+        type: 'phonetic',
+        phoneticGuide: 'Me-SIÖ',
+        trap: 'La R y la N desaparecen completamente',
+        mnemonic: 'Suena como "mesiú" en español'
+    },
+    {
+        id: 'phon-4',
+        emoji: '🪑',
+        french: 'S\'asseoir',
+        meaning: 'Sentarse',
+        type: 'phonetic',
+        phoneticGuide: 'Sa-SWÁR',
+        trap: 'Doble S y OI→wa',
+        mnemonic: 'Sasuar = sentarse en el sofá'
+    },
+    {
+        id: 'phon-5',
+        emoji: '🥚',
+        french: 'Œuf',
+        meaning: 'Huevo',
+        type: 'phonetic',
+        phoneticGuide: 'ÖF',
+        trap: 'La Œ suena como una O cerrada alemana',
+        mnemonic: 'Piensa en decir "of" pero redondeando los labios'
+    },
+    {
+        id: 'phon-6',
+        emoji: '🔐',
+        french: 'Serrurerie',
+        meaning: 'Cerrajería',
+        type: 'phonetic',
+        phoneticGuide: 'Se-ú-re-RÍ',
+        trap: 'Trabalenguas de Rs - la E entre Rs es casi muda',
+        mnemonic: 'El trabalenguas del cerrajero'
+    },
+    {
+        id: 'phon-7',
+        emoji: '📅',
+        french: 'Aujourd\'hui',
+        meaning: 'Hoy',
+        type: 'phonetic',
+        phoneticGuide: 'O-yur-DÜÍ',
+        trap: 'AU→o, la R es suave, HUI→üi',
+        mnemonic: 'Piensa: "Oyur-dui" como si fuera una palabra china'
+    },
+    {
+        id: 'phon-8',
+        emoji: '🥐',
+        french: 'Croissant',
+        meaning: 'Cruasán',
+        type: 'phonetic',
+        phoneticGuide: 'Krua-SÁN',
+        trap: 'La T final es MUDA, AN es nasal',
+        mnemonic: 'Krua-SAN (no "sant")'
+    },
+    {
+        id: 'phon-9',
+        emoji: '🏥',
+        french: 'Hôpital',
+        meaning: 'Hospital',
+        type: 'phonetic',
+        phoneticGuide: 'O-pi-TÁL',
+        trap: 'La H es muda, el acento cirunflejo (ô) indica una O larga',
+        mnemonic: 'Sin la H: O-pital'
+    },
+    {
+        id: 'phon-10',
+        emoji: '💧',
+        french: 'Eau',
+        meaning: 'Agua',
+        type: 'phonetic',
+        phoneticGuide: 'Ó',
+        trap: 'Tres letras, un solo sonido: O',
+        mnemonic: 'E-A-U = solo "O"... el francés es eficiente'
+    },
+];
+
+// =====================================================
 // EXPORTED TRACKS COLLECTION
 // =====================================================
 export const TRACKS: Track[] = [
@@ -161,6 +270,15 @@ export const TRACKS: Track[] = [
         color: 'rose',
         deck: GLUE_DECK,
     },
+    {
+        id: 'phonetic',
+        title: 'Phonetic Lab',
+        titleFr: 'Le Labo Phonétique',
+        icon: 'AudioWaveform',
+        description: 'Palabras difíciles con guía de pronunciación',
+        color: 'fuchsia',
+        deck: PHONETIC_DECK,
+    },
 ];
 
 // Helper function to get a track by ID
@@ -171,4 +289,9 @@ export function getTrackById(trackId: string): Track | undefined {
 // Helper function to get default track
 export function getDefaultTrack(): Track {
     return TRACKS[0]; // Survival is default
+}
+
+// Helper function to get ALL cards from ALL tracks (for Quiz Mode)
+export function getAllCards(): Card[] {
+    return TRACKS.flatMap(track => track.deck);
 }

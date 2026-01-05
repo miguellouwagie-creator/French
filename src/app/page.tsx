@@ -4,7 +4,10 @@ import { getDatabase } from '../lib/db';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { TRACKS } from '../lib/data';
-import { Shield, Package, Zap, Briefcase, Link as LinkIcon, BarChart3, Settings } from 'lucide-react';
+import {
+  Shield, Package, Zap, Briefcase, Link as LinkIcon,
+  BarChart3, Settings, AudioWaveform, Gamepad2, Trophy
+} from 'lucide-react';
 
 // Icon mapping for dynamic rendering
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -13,6 +16,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Zap,
   Briefcase,
   Link: LinkIcon,
+  AudioWaveform,
 };
 
 // Color mapping for track cards
@@ -47,6 +51,12 @@ const colorMap: Record<string, { bg: string; border: string; text: string; glow:
     text: 'text-rose-400',
     glow: 'group-hover:shadow-[0_0_30px_rgba(244,63,94,0.3)]',
   },
+  fuchsia: {
+    bg: 'from-fuchsia-500/20 to-fuchsia-600/5',
+    border: 'border-fuchsia-500/30',
+    text: 'text-fuchsia-400',
+    glow: 'group-hover:shadow-[0_0_30px_rgba(217,70,239,0.3)]',
+  },
 };
 
 export default function Home() {
@@ -67,6 +77,9 @@ export default function Home() {
     init();
   }, []);
 
+  // Calculate total cards
+  const totalCards = TRACKS.reduce((acc, track) => acc + track.deck.length, 0);
+
   return (
     <main className="flex flex-col min-h-screen bg-transparent text-brand-text overflow-x-hidden">
 
@@ -76,7 +89,7 @@ export default function Home() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="pt-8 pb-6"
+          className="pt-8 pb-4"
         >
           {/* Greeting */}
           <p className="text-brand-muted text-sm font-medium mb-1">Bonjour,</p>
@@ -96,15 +109,67 @@ export default function Home() {
             <span className="text-xs text-brand-muted">{dbStatus}</span>
           </div>
         </motion.div>
+      </div>
 
-        {/* Section Title */}
+      {/* === GAME MODE CARD === */}
+      <div className="px-6 mb-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1, duration: 0.5 }}
+        >
+          <Link href="/game">
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="group relative overflow-hidden rounded-2xl p-5 border border-amber-500/40 transition-all duration-300"
+              style={{
+                background: 'linear-gradient(135deg, rgba(245,158,11,0.15) 0%, rgba(217,70,239,0.1) 50%, rgba(34,211,238,0.05) 100%)',
+              }}
+            >
+              {/* Animated Background Glow */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{
+                  background: 'radial-gradient(ellipse at center, rgba(245,158,11,0.2) 0%, transparent 70%)',
+                }}
+              />
+
+              <div className="relative z-10 flex items-center gap-4">
+                {/* Game Icon */}
+                <div className="p-4 rounded-2xl bg-gradient-to-br from-amber-500/30 to-fuchsia-500/20 border border-amber-500/30">
+                  <Gamepad2 className="w-8 h-8 text-amber-400" />
+                </div>
+
+                {/* Content */}
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="font-bold text-lg text-white">Le Mixeur</h3>
+                    <span className="text-xs bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded-full font-bold">
+                      GAME
+                    </span>
+                  </div>
+                  <p className="text-sm text-brand-muted">
+                    Quiz con todas las {totalCards} cartas
+                  </p>
+                </div>
+
+                {/* Trophy */}
+                <Trophy className="w-6 h-6 text-amber-400 opacity-60 group-hover:opacity-100 transition-opacity" />
+              </div>
+            </motion.div>
+          </Link>
+        </motion.div>
+      </div>
+
+      {/* === SECTION TITLE === */}
+      <div className="px-6">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="flex items-center justify-between mb-4"
+          className="flex items-center justify-between mb-3"
         >
-          <h2 className="text-lg font-semibold text-white">Elige tu Pista</h2>
+          <h2 className="text-lg font-semibold text-white">Pistas de Estudio</h2>
           <span className="text-xs text-brand-muted">{TRACKS.length} tracks</span>
         </motion.div>
       </div>
@@ -112,14 +177,14 @@ export default function Home() {
       {/* === TRACK GRID === */}
       <div className="flex-1 px-6 pb-6 overflow-y-auto">
         <motion.div
-          className="grid gap-4"
+          className="grid gap-3"
           initial="hidden"
           animate="visible"
           variants={{
             hidden: { opacity: 0 },
             visible: {
               opacity: 1,
-              transition: { staggerChildren: 0.1 }
+              transition: { staggerChildren: 0.08 }
             }
           }}
         >
@@ -139,48 +204,36 @@ export default function Home() {
                   <motion.div
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className={`group relative overflow-hidden rounded-2xl p-5 border backdrop-blur-sm transition-all duration-300 ${colors.border} ${colors.glow}`}
+                    className={`group relative overflow-hidden rounded-2xl p-4 border backdrop-blur-sm transition-all duration-300 ${colors.border} ${colors.glow}`}
                     style={{
-                      background: `linear-gradient(135deg, ${colors.bg.includes('cyan') ? 'rgba(34,211,238,0.1)' : colors.bg.includes('violet') ? 'rgba(139,92,246,0.1)' : colors.bg.includes('amber') ? 'rgba(245,158,11,0.1)' : colors.bg.includes('emerald') ? 'rgba(16,185,129,0.1)' : 'rgba(244,63,94,0.1)'} 0%, rgba(255,255,255,0.02) 100%)`,
+                      background: `linear-gradient(135deg, ${colors.bg.includes('cyan') ? 'rgba(34,211,238,0.08)' : colors.bg.includes('violet') ? 'rgba(139,92,246,0.08)' : colors.bg.includes('amber') ? 'rgba(245,158,11,0.08)' : colors.bg.includes('emerald') ? 'rgba(16,185,129,0.08)' : colors.bg.includes('fuchsia') ? 'rgba(217,70,239,0.08)' : 'rgba(244,63,94,0.08)'} 0%, rgba(255,255,255,0.02) 100%)`,
                     }}
                   >
-                    {/* Background Glow */}
-                    <div className="absolute -right-8 -top-8 w-32 h-32 rounded-full opacity-20 blur-2xl transition-opacity group-hover:opacity-40"
-                      style={{
-                        background: colors.text.includes('cyan') ? '#22d3ee' :
-                          colors.text.includes('violet') ? '#8b5cf6' :
-                            colors.text.includes('amber') ? '#f59e0b' :
-                              colors.text.includes('emerald') ? '#10b981' : '#f43f5e'
-                      }}
-                    />
-
-                    <div className="relative z-10 flex items-start gap-4">
+                    <div className="relative z-10 flex items-center gap-4">
                       {/* Icon */}
-                      <div className={`p-3 rounded-xl bg-white/5 border border-white/10 ${colors.text}`}>
-                        <IconComponent className="w-6 h-6" />
+                      <div className={`p-2.5 rounded-xl bg-white/5 border border-white/10 ${colors.text}`}>
+                        <IconComponent className="w-5 h-5" />
                       </div>
 
                       {/* Content */}
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-semibold text-white">{track.title}</h3>
-                          <span className={`text-xs font-medium ${colors.text}`}>
+                        <div className="flex items-center gap-2 mb-0.5">
+                          <h3 className="font-semibold text-white text-sm">{track.title}</h3>
+                          <span className={`text-[10px] font-medium ${colors.text}`}>
                             {track.titleFr}
                           </span>
                         </div>
-                        <p className="text-sm text-brand-muted leading-relaxed">
+                        <p className="text-xs text-brand-muted leading-relaxed">
                           {track.description}
                         </p>
-                        <div className="flex items-center gap-2 mt-3">
-                          <span className="text-xs text-brand-muted/70 bg-white/5 px-2 py-1 rounded-full">
-                            {track.deck.length} cartas
-                          </span>
-                        </div>
                       </div>
 
-                      {/* Arrow */}
-                      <div className="text-brand-muted group-hover:text-white transition-colors">
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      {/* Card Count + Arrow */}
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-brand-muted/70 bg-white/5 px-2 py-1 rounded-full">
+                          {track.deck.length}
+                        </span>
+                        <svg className="w-4 h-4 text-brand-muted group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                         </svg>
                       </div>
