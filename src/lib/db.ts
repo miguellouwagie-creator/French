@@ -2,8 +2,9 @@ import { createRxDatabase, RxDatabase, RxCollection, RxJsonSchema, addRxPlugin }
 import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
 import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode';
 import { wrappedValidateAjvStorage } from 'rxdb/plugins/validate-ajv';
-import SHA256 from 'crypto-js/sha256'; // <--- NUEVA LIBRERÍA
+import SHA256 from 'crypto-js/sha256';
 
+// Solo activamos plugins de desarrollo en local
 if (process.env.NODE_ENV === 'development') {
     addRxPlugin(RxDBDevModePlugin);
 }
@@ -21,7 +22,11 @@ const cardSchema: RxJsonSchema<any> = {
         interval: { type: 'number' },
         factor: { type: 'number' },
         dueDate: { type: 'number' },
-        state: { type: 'string', enum: ['new', 'learning', 'review', 'relearning'] }
+        state: { type: 'string', enum: ['new', 'learning', 'review', 'relearning'] },
+        // Campos nuevos opcionales para el Laboratorio
+        phoneticGuide: { type: 'string' },
+        mnemonic: { type: 'string' },
+        trap: { type: 'string' }
     },
     required: ['id', 'front', 'back', 'dueDate', 'state']
 };
@@ -35,6 +40,9 @@ export type CardDoc = {
     factor: number;
     dueDate: number;
     state: 'new' | 'learning' | 'review' | 'relearning';
+    phoneticGuide?: string;
+    mnemonic?: string;
+    trap?: string;
 };
 
 export type MyDatabaseCollections = {
@@ -45,7 +53,6 @@ export type MyDatabase = RxDatabase<MyDatabaseCollections>;
 
 let dbPromise: Promise<MyDatabase> | null = null;
 
-// FUNCIÓN HASH COMPATIBLE CON IPHONE (HTTP)
 const cryptoJsHash = async (data: string) => {
     return SHA256(data).toString();
 };
@@ -58,9 +65,10 @@ export const getDatabase = async (): Promise<MyDatabase> => {
         : getRxStorageDexie();
 
     dbPromise = createRxDatabase<MyDatabaseCollections>({
-        name: 'larchitectedb',
+        name: 'larchitectedb_v2', // <--- CAMBIO CLAVE: Nombre nuevo para resetear datos corruptos
         storage: storage,
-        hashFunction: cryptoJsHash, // <--- AQUÍ APLICAMOS EL PARCHE
+        hashFunction: cryptoJsHash,
+        multiInstance: false,     // <--- CAMBIO CLAVE: Evita errores de bloqueo en iPhone
         ignoreDuplicate: true
     }).then(async (db) => {
         await db.addCollections({
@@ -68,7 +76,7 @@ export const getDatabase = async (): Promise<MyDatabase> => {
                 schema: cardSchema
             }
         });
-        console.log("🧠 Cerebro L'Architecte activado (Modo Compatible iPhone)");
+        console.log("🧠 Cerebro L'Architecte activado (v2)");
         return db;
     });
 

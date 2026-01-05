@@ -69,9 +69,10 @@ export default function Home() {
         await getDatabase();
         setDbStatus("Cerebro Activo");
         setIsReady(true);
-      } catch (e) {
-        setDbStatus("Error de Sistema");
-        console.error(e);
+      } catch (e: any) {
+        // AHORA MOSTRAMOS EL ERROR REAL EN PANTALLA
+        setDbStatus(`Error: ${e.message || "Desconocido"}`);
+        console.error("Falló la base de datos:", e);
       }
     };
     init();
