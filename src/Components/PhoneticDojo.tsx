@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Volume2, RefreshCw, AlertTriangle, Brain } from 'lucide-react';
+import { ArrowLeft, Volume2, RefreshCw, AlertTriangle, Brain, Turtle } from 'lucide-react';
 import Link from 'next/link';
 import { getTrackById, getDefaultTrack, type Track, type Card } from '../lib/data';
 
@@ -30,6 +30,7 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
     const [selectedVoice, setSelectedVoice] = useState<SpeechSynthesisVoice | null>(null);
     const [showVoiceModal, setShowVoiceModal] = useState(false);
     const [cardKey, setCardKey] = useState(0);
+    const [isSlowMode, setIsSlowMode] = useState(false);
 
     // Load track and shuffle deck when trackId changes
     useEffect(() => {
@@ -76,7 +77,7 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
         return () => clearInterval(interval);
     }, [loadVoices]);
 
-    const speakFrench = (text: string) => {
+    const speakFrench = (text: string, speed: number = 0.9) => {
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();
             const utterance = new SpeechSynthesisUtterance(text);
@@ -87,11 +88,21 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
             } else {
                 utterance.lang = 'fr-FR';
             }
-            utterance.rate = 0.85;
+            utterance.rate = speed;
 
-            utterance.onstart = () => setIsSpeaking(true);
-            utterance.onend = () => setIsSpeaking(false);
-            utterance.onerror = () => setIsSpeaking(false);
+            const isSlow = speed < 0.8;
+            utterance.onstart = () => {
+                setIsSpeaking(true);
+                setIsSlowMode(isSlow);
+            };
+            utterance.onend = () => {
+                setIsSpeaking(false);
+                setIsSlowMode(false);
+            };
+            utterance.onerror = () => {
+                setIsSpeaking(false);
+                setIsSlowMode(false);
+            };
 
             window.speechSynthesis.speak(utterance);
         }
@@ -256,24 +267,58 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
                                     </motion.div>
                                 )}
 
-                                {/* Speaker Button */}
-                                <motion.button
-                                    whileTap={{ scale: 0.9 }}
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        speakFrench(card.french);
-                                    }}
-                                    disabled={isSpeaking}
-                                    className={`glass-pill rounded-full px-6 py-3 flex items-center gap-3 transition-all duration-300 ${isSpeaking
+                                {/* Audio Buttons */}
+                                <div className="flex items-center gap-3">
+                                    {/* Main Speaker Button */}
+                                    <motion.button
+                                        whileTap={{ scale: 0.9 }}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            speakFrench(card.french, 0.9);
+                                        }}
+                                        disabled={isSpeaking}
+                                        className={`glass-pill rounded-full px-6 py-3 flex items-center gap-3 transition-all duration-300 ${isSpeaking && !isSlowMode
                                             ? 'glow-cyan-intense scale-105'
                                             : 'hover:bg-white/10'
-                                        }`}
-                                >
-                                    <Volume2 className={`w-5 h-5 ${isSpeaking ? 'animate-pulse text-cyan-400' : 'text-white'}`} />
-                                    <span className="text-sm font-medium text-white">
-                                        {isSpeaking ? 'Escuchando...' : 'Escuchar'}
-                                    </span>
-                                </motion.button>
+                                            }`}
+                                    >
+                                        <Volume2 className={`w-5 h-5 ${isSpeaking && !isSlowMode ? 'animate-pulse text-cyan-400' : 'text-white'}`} />
+                                        <span className="text-sm font-medium text-white">
+                                            {isSpeaking && !isSlowMode ? 'Escuchando...' : 'Escuchar'}
+                                        </span>
+                                    </motion.button>
+
+                                    {/* Slow Motion Button (Turtle) */}
+                                    <motion.button
+                                        whileTap={{ scale: 0.9 }}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            speakFrench(card.french, 0.65);
+                                        }}
+                                        disabled={isSpeaking}
+                                        className={`glass-pill rounded-full p-3 flex items-center justify-center transition-all duration-300 border ${isSlowMode
+                                            ? 'border-amber-400/50 bg-amber-500/20 shadow-[0_0_20px_rgba(245,158,11,0.3)]'
+                                            : 'border-amber-500/30 hover:bg-amber-500/10 hover:border-amber-400/50'
+                                            }`}
+                                        title="Reproducción lenta"
+                                    >
+                                        <Turtle className={`w-5 h-5 transition-all ${isSlowMode
+                                            ? 'text-amber-400 animate-pulse'
+                                            : 'text-amber-400/70'}`}
+                                        />
+                                    </motion.button>
+                                </div>
+
+                                {/* Speed Hint */}
+                                {isSlowMode && (
+                                    <motion.p
+                                        initial={{ opacity: 0, y: -5 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        className="text-xs text-amber-400 font-medium"
+                                    >
+                                        🐢 Modo lento activo
+                                    </motion.p>
+                                )}
 
                                 {/* Translation (Revealed on Tap) - Only if NOT phonetic lab or if phonetic lab and tapped */}
                                 <AnimatePresence>
@@ -416,8 +461,8 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
                                                 setShowVoiceModal(false);
                                             }}
                                             className={`w-full flex items-center gap-3 p-4 rounded-xl transition-all ${selectedVoice?.name === v.name
-                                                    ? 'glass-card-elevated border-cyan-400/50 glow-cyan'
-                                                    : 'glass-card hover:bg-white/10'
+                                                ? 'glass-card-elevated border-cyan-400/50 glow-cyan'
+                                                : 'glass-card hover:bg-white/10'
                                                 }`}
                                         >
                                             <span className="text-xl">
