@@ -14,17 +14,44 @@ const config: Config = {
                 sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
             },
             colors: {
+                // L'Atelier Light Theme
+                paper: {
+                    50: "#fff7ed",   // orange-50 - Warm background
+                    100: "#ffedd5",  // orange-100 - Subtle warmth
+                },
+                ink: {
+                    DEFAULT: "#1e293b", // slate-800 - Primary text
+                    dark: "#0f172a",    // slate-900 - Headers
+                    muted: "#64748b",   // slate-500 - Secondary text
+                },
+                primary: {
+                    DEFAULT: "#ea580c", // orange-600 - Main actions
+                    light: "#f97316",   // orange-500 - Hover states
+                    dark: "#c2410c",    // orange-700 - Active states
+                },
+                accent: {
+                    // Track-specific vibrant colors
+                    cyan: "#06b6d4",
+                    violet: "#8b5cf6",
+                    amber: "#f59e0b",
+                    emerald: "#10b981",
+                    rose: "#f43f5e",
+                    fuchsia: "#d946ef",
+                    sky: "#0ea5e9",
+                    teal: "#14b8a6",
+                },
+                // Keep original brand for backwards compatibility
                 brand: {
-                    bg: "#020617",        // slate-950 - Deep Abyss
-                    surface: "rgba(255, 255, 255, 0.05)",
-                    glass: "rgba(255, 255, 255, 0.08)",
-                    border: "rgba(255, 255, 255, 0.1)",
-                    primary: "#22d3ee",   // cyan-400 - Electric Cyan
-                    text: "#f8fafc",      // slate-50
-                    muted: "#94a3b8",     // slate-400
-                    success: "#22c55e",   // green-500
-                    error: "#f87171",     // red-400
-                    warning: "#fbbf24",   // amber-400
+                    bg: "#fff7ed",
+                    surface: "white",
+                    glass: "rgba(255, 255, 255, 0.9)",
+                    border: "rgba(0, 0, 0, 0.08)",
+                    primary: "#ea580c",
+                    text: "#1e293b",
+                    muted: "#64748b",
+                    success: "#22c55e",
+                    error: "#ef4444",
+                    warning: "#f59e0b",
                 },
             },
             padding: {
@@ -44,11 +71,11 @@ const config: Config = {
             keyframes: {
                 'pulse-glow': {
                     '0%, 100%': {
-                        boxShadow: '0 0 20px rgba(34, 211, 238, 0.4)',
+                        boxShadow: '0 0 20px rgba(234, 88, 12, 0.3)',
                         transform: 'scale(1)',
                     },
                     '50%': {
-                        boxShadow: '0 0 40px rgba(34, 211, 238, 0.6)',
+                        boxShadow: '0 0 40px rgba(234, 88, 12, 0.5)',
                         transform: 'scale(1.02)',
                     },
                 },

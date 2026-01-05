@@ -22,55 +22,47 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Puzzle,
 };
 
-// Color mapping for track cards
-const colorMap: Record<string, { bg: string; border: string; text: string; glow: string }> = {
+// Vibrant color mapping for light mode - icon backgrounds
+const colorMap: Record<string, { iconBg: string; iconText: string; hoverBg: string }> = {
   cyan: {
-    bg: 'from-cyan-500/20 to-cyan-600/5',
-    border: 'border-cyan-500/30',
-    text: 'text-cyan-400',
-    glow: 'group-hover:shadow-[0_0_30px_rgba(34,211,238,0.3)]',
+    iconBg: 'bg-cyan-100',
+    iconText: 'text-cyan-600',
+    hoverBg: 'hover:bg-cyan-50',
   },
   violet: {
-    bg: 'from-violet-500/20 to-violet-600/5',
-    border: 'border-violet-500/30',
-    text: 'text-violet-400',
-    glow: 'group-hover:shadow-[0_0_30px_rgba(139,92,246,0.3)]',
+    iconBg: 'bg-violet-100',
+    iconText: 'text-violet-600',
+    hoverBg: 'hover:bg-violet-50',
   },
   amber: {
-    bg: 'from-amber-500/20 to-amber-600/5',
-    border: 'border-amber-500/30',
-    text: 'text-amber-400',
-    glow: 'group-hover:shadow-[0_0_30px_rgba(245,158,11,0.3)]',
+    iconBg: 'bg-amber-100',
+    iconText: 'text-amber-600',
+    hoverBg: 'hover:bg-amber-50',
   },
   emerald: {
-    bg: 'from-emerald-500/20 to-emerald-600/5',
-    border: 'border-emerald-500/30',
-    text: 'text-emerald-400',
-    glow: 'group-hover:shadow-[0_0_30px_rgba(16,185,129,0.3)]',
+    iconBg: 'bg-emerald-100',
+    iconText: 'text-emerald-600',
+    hoverBg: 'hover:bg-emerald-50',
   },
   rose: {
-    bg: 'from-rose-500/20 to-rose-600/5',
-    border: 'border-rose-500/30',
-    text: 'text-rose-400',
-    glow: 'group-hover:shadow-[0_0_30px_rgba(244,63,94,0.3)]',
+    iconBg: 'bg-rose-100',
+    iconText: 'text-rose-600',
+    hoverBg: 'hover:bg-rose-50',
   },
   fuchsia: {
-    bg: 'from-fuchsia-500/20 to-fuchsia-600/5',
-    border: 'border-fuchsia-500/30',
-    text: 'text-fuchsia-400',
-    glow: 'group-hover:shadow-[0_0_30px_rgba(217,70,239,0.3)]',
+    iconBg: 'bg-fuchsia-100',
+    iconText: 'text-fuchsia-600',
+    hoverBg: 'hover:bg-fuchsia-50',
   },
   sky: {
-    bg: 'from-sky-500/20 to-sky-600/5',
-    border: 'border-sky-500/30',
-    text: 'text-sky-400',
-    glow: 'group-hover:shadow-[0_0_30px_rgba(56,189,248,0.3)]',
+    iconBg: 'bg-sky-100',
+    iconText: 'text-sky-600',
+    hoverBg: 'hover:bg-sky-50',
   },
   teal: {
-    bg: 'from-teal-500/20 to-teal-600/5',
-    border: 'border-teal-500/30',
-    text: 'text-teal-400',
-    glow: 'group-hover:shadow-[0_0_30px_rgba(20,184,166,0.3)]',
+    iconBg: 'bg-teal-100',
+    iconText: 'text-teal-600',
+    hoverBg: 'hover:bg-teal-50',
   },
 };
 
@@ -85,7 +77,6 @@ export default function Home() {
         setDbStatus("Cerebro Activo");
         setIsReady(true);
       } catch (e: any) {
-        // AHORA MOSTRAMOS EL ERROR REAL EN PANTALLA
         setDbStatus(`Error: ${e.message || "Desconocido"}`);
         console.error("Falló la base de datos:", e);
       }
@@ -93,11 +84,10 @@ export default function Home() {
     init();
   }, []);
 
-  // Calculate total cards
   const totalCards = TRACKS.reduce((acc, track) => acc + track.deck.length, 0);
 
   return (
-    <main className="flex flex-col min-h-screen bg-transparent text-brand-text overflow-x-hidden">
+    <main className="flex flex-col min-h-screen bg-paper-50 text-ink overflow-x-hidden">
 
       {/* === HERO SECTION === */}
       <div className="px-6 pt-safe">
@@ -105,30 +95,30 @@ export default function Home() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="pt-8 pb-4"
+          className="pt-8 pb-6"
         >
           {/* Greeting */}
-          <p className="text-brand-muted text-sm font-medium mb-1">Bonjour,</p>
-          <h1 className="text-3xl font-display font-bold text-white mb-2">
+          <p className="text-ink-muted text-sm font-semibold mb-1">Bonjour,</p>
+          <h1 className="text-4xl font-display font-bold text-ink-dark mb-2">
             Miguel 👋
           </h1>
 
           {/* Status Badge */}
           <div className="flex items-center gap-2 mt-4">
             <div className="relative">
-              <div className={`h-2.5 w-2.5 rounded-full transition-all ${isReady ? "bg-green-400" : "bg-brand-muted animate-pulse"
+              <div className={`h-2.5 w-2.5 rounded-full transition-all ${isReady ? "bg-emerald-500" : "bg-ink-muted animate-pulse"
                 }`} />
               {isReady && (
-                <div className="absolute inset-0 h-2.5 w-2.5 rounded-full bg-green-400 animate-ping opacity-40" />
+                <div className="absolute inset-0 h-2.5 w-2.5 rounded-full bg-emerald-400 animate-ping opacity-40" />
               )}
             </div>
-            <span className="text-xs text-brand-muted">{dbStatus}</span>
+            <span className="text-xs text-ink-muted font-medium">{dbStatus}</span>
           </div>
         </motion.div>
       </div>
 
-      {/* === GAME MODE CARD === */}
-      <div className="px-6 mb-4">
+      {/* === GAME MODE CARD (Featured) === */}
+      <div className="px-6 mb-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -136,41 +126,34 @@ export default function Home() {
         >
           <Link href="/game">
             <motion.div
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="group relative overflow-hidden rounded-2xl p-5 border border-amber-500/40 transition-all duration-300"
+              whileHover={{ scale: 1.01, y: -2 }}
+              whileTap={{ scale: 0.99 }}
+              className="group relative overflow-hidden rounded-3xl p-6 shadow-lg transition-all duration-300"
               style={{
-                background: 'linear-gradient(135deg, rgba(245,158,11,0.15) 0%, rgba(217,70,239,0.1) 50%, rgba(34,211,238,0.05) 100%)',
+                background: 'linear-gradient(135deg, #fb923c 0%, #f97316 50%, #ec4899 100%)',
               }}
             >
-              {/* Animated Background Glow */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                style={{
-                  background: 'radial-gradient(ellipse at center, rgba(245,158,11,0.2) 0%, transparent 70%)',
-                }}
-              />
-
-              <div className="relative z-10 flex items-center gap-4">
+              <div className="relative z-10 flex items-center gap-5">
                 {/* Game Icon */}
-                <div className="p-4 rounded-2xl bg-gradient-to-br from-amber-500/30 to-fuchsia-500/20 border border-amber-500/30">
-                  <Gamepad2 className="w-8 h-8 text-amber-400" />
+                <div className="p-4 rounded-2xl bg-white/20 backdrop-blur-sm">
+                  <Gamepad2 className="w-10 h-10 text-white" />
                 </div>
 
                 {/* Content */}
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-bold text-lg text-white">Le Mixeur</h3>
-                    <span className="text-xs bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded-full font-bold">
+                    <h3 className="font-bold text-2xl text-white">Le Mixeur</h3>
+                    <span className="text-xs bg-white/30 text-white px-2.5 py-1 rounded-full font-bold backdrop-blur-sm">
                       GAME
                     </span>
                   </div>
-                  <p className="text-sm text-brand-muted">
+                  <p className="text-sm text-white/90 font-medium">
                     Quiz con todas las {totalCards} cartas
                   </p>
                 </div>
 
                 {/* Trophy */}
-                <Trophy className="w-6 h-6 text-amber-400 opacity-60 group-hover:opacity-100 transition-opacity" />
+                <Trophy className="w-8 h-8 text-white/70 group-hover:text-white transition-colors" />
               </div>
             </motion.div>
           </Link>
@@ -178,29 +161,31 @@ export default function Home() {
       </div>
 
       {/* === SECTION TITLE === */}
-      <div className="px-6">
+      <div className="px-6 mb-4">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="flex items-center justify-between mb-3"
+          className="flex items-center justify-between"
         >
-          <h2 className="text-lg font-semibold text-white">Pistas de Estudio</h2>
-          <span className="text-xs text-brand-muted">{TRACKS.length} tracks</span>
+          <h2 className="text-xl font-bold text-ink-dark">Pistas de Estudio</h2>
+          <span className="text-xs text-ink-muted font-semibold px-3 py-1 rounded-full bg-white border border-black/5">
+            {TRACKS.length} tracks
+          </span>
         </motion.div>
       </div>
 
-      {/* === TRACK GRID === */}
+      {/* === BENTO GRID === */}
       <div className="flex-1 px-6 pb-6 overflow-y-auto">
         <motion.div
-          className="grid gap-3"
+          className="grid grid-cols-2 gap-3"
           initial="hidden"
           animate="visible"
           variants={{
             hidden: { opacity: 0 },
             visible: {
               opacity: 1,
-              transition: { staggerChildren: 0.08 }
+              transition: { staggerChildren: 0.05 }
             }
           }}
         >
@@ -218,41 +203,37 @@ export default function Home() {
               >
                 <Link href={`/dojo?track=${track.id}`}>
                   <motion.div
-                    whileHover={{ scale: 1.02 }}
+                    whileHover={{ y: -4, scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className={`group relative overflow-hidden rounded-2xl p-4 border backdrop-blur-sm transition-all duration-300 ${colors.border} ${colors.glow}`}
-                    style={{
-                      background: `linear-gradient(135deg, ${colors.bg.includes('cyan') ? 'rgba(34,211,238,0.08)' : colors.bg.includes('violet') ? 'rgba(139,92,246,0.08)' : colors.bg.includes('amber') ? 'rgba(245,158,11,0.08)' : colors.bg.includes('emerald') ? 'rgba(16,185,129,0.08)' : colors.bg.includes('fuchsia') ? 'rgba(217,70,239,0.08)' : 'rgba(244,63,94,0.08)'} 0%, rgba(255,255,255,0.02) 100%)`,
-                    }}
+                    className={`card-interactive group p-4 rounded-2xl transition-all duration-200 ${colors.hoverBg}`}
                   >
-                    <div className="relative z-10 flex items-center gap-4">
-                      {/* Icon */}
-                      <div className={`p-2.5 rounded-xl bg-white/5 border border-white/10 ${colors.text}`}>
-                        <IconComponent className="w-5 h-5" />
-                      </div>
+                    {/* Icon with colorful background */}
+                    <div className={`${colors.iconBg} p-3 rounded-xl w-fit mb-3`}>
+                      <IconComponent className={`w-6 h-6 ${colors.iconText}`} />
+                    </div>
 
-                      {/* Content */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-0.5">
-                          <h3 className="font-semibold text-white text-sm">{track.title}</h3>
-                          <span className={`text-[10px] font-medium ${colors.text}`}>
-                            {track.titleFr}
-                          </span>
-                        </div>
-                        <p className="text-xs text-brand-muted leading-relaxed">
-                          {track.description}
-                        </p>
-                      </div>
+                    {/* Content */}
+                    <div className="mb-3">
+                      <h3 className="font-bold text-ink-dark text-sm mb-0.5">
+                        {track.title}
+                      </h3>
+                      <p className="text-[10px] text-ink-muted font-medium">
+                        {track.titleFr}
+                      </p>
+                    </div>
 
-                      {/* Card Count + Arrow */}
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-brand-muted/70 bg-white/5 px-2 py-1 rounded-full">
-                          {track.deck.length}
-                        </span>
-                        <svg className="w-4 h-4 text-brand-muted group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                      </div>
+                    <p className="text-xs text-ink-muted leading-relaxed mb-3">
+                      {track.description}
+                    </p>
+
+                    {/* Card Count */}
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-ink-muted font-semibold bg-black/5 px-2 py-1 rounded-full">
+                        {track.deck.length} cartas
+                      </span>
+                      <svg className="w-4 h-4 text-ink-muted/50 group-hover:text-primary group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
                     </div>
                   </motion.div>
                 </Link>
@@ -262,18 +243,20 @@ export default function Home() {
         </motion.div>
       </div>
 
-      {/* === BOTTOM NAVIGATION === */}
+      {/* === BOTTOM NAVIGATION (Floating White Pill) === */}
       <motion.div
         initial={{ y: 100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5, delay: 0.3 }}
-        className="pb-safe glass-pill mx-4 mb-4 rounded-[2rem]"
+        className="pb-safe mx-4 mb-4"
       >
-        <nav className="flex justify-around items-center py-4">
-          <NavItem icon={<Zap className="w-5 h-5" />} label="Dojo" active />
-          <NavItem icon={<BarChart3 className="w-5 h-5" />} label="Progreso" />
-          <NavItem icon={<Settings className="w-5 h-5" />} label="Config" />
-        </nav>
+        <div className="pill-light rounded-3xl shadow-[0_4px_20px_rgba(0,0,0,0.08)]">
+          <nav className="flex justify-around items-center py-4">
+            <NavItem icon={<Zap className="w-5 h-5" />} label="Dojo" active />
+            <NavItem icon={<BarChart3 className="w-5 h-5" />} label="Progreso" />
+            <NavItem icon={<Settings className="w-5 h-5" />} label="Config" />
+          </nav>
+        </div>
       </motion.div>
     </main>
   );
@@ -290,7 +273,9 @@ function NavItem({
 }) {
   return (
     <button
-      className={`flex flex-col items-center gap-1.5 px-6 py-2 rounded-xl transition-all duration-200 btn-tactile ${active ? "text-cyan-400" : "text-brand-muted hover:text-white"
+      className={`flex flex-col items-center gap-1.5 px-6 py-2 rounded-xl transition-all duration-200 btn-tactile ${active
+          ? "text-primary bg-orange-50"
+          : "text-ink-muted hover:text-ink"
         }`}
     >
       {icon}
