@@ -10,60 +10,19 @@ import {
   Table2, Puzzle
 } from 'lucide-react';
 
-// Icon mapping for dynamic rendering
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  Shield,
-  Package,
-  Zap,
-  Briefcase,
-  Link: LinkIcon,
-  AudioWaveform,
-  Table2,
-  Puzzle,
+  Shield, Package, Zap, Briefcase, Link: LinkIcon, AudioWaveform, Table2, Puzzle,
 };
 
-// Vibrant color mapping for light mode - icon backgrounds
 const colorMap: Record<string, { iconBg: string; iconText: string; hoverBg: string }> = {
-  cyan: {
-    iconBg: 'bg-cyan-100',
-    iconText: 'text-cyan-600',
-    hoverBg: 'hover:bg-cyan-50',
-  },
-  violet: {
-    iconBg: 'bg-violet-100',
-    iconText: 'text-violet-600',
-    hoverBg: 'hover:bg-violet-50',
-  },
-  amber: {
-    iconBg: 'bg-amber-100',
-    iconText: 'text-amber-600',
-    hoverBg: 'hover:bg-amber-50',
-  },
-  emerald: {
-    iconBg: 'bg-emerald-100',
-    iconText: 'text-emerald-600',
-    hoverBg: 'hover:bg-emerald-50',
-  },
-  rose: {
-    iconBg: 'bg-rose-100',
-    iconText: 'text-rose-600',
-    hoverBg: 'hover:bg-rose-50',
-  },
-  fuchsia: {
-    iconBg: 'bg-fuchsia-100',
-    iconText: 'text-fuchsia-600',
-    hoverBg: 'hover:bg-fuchsia-50',
-  },
-  sky: {
-    iconBg: 'bg-sky-100',
-    iconText: 'text-sky-600',
-    hoverBg: 'hover:bg-sky-50',
-  },
-  teal: {
-    iconBg: 'bg-teal-100',
-    iconText: 'text-teal-600',
-    hoverBg: 'hover:bg-teal-50',
-  },
+  cyan: { iconBg: 'bg-cyan-100', iconText: 'text-cyan-600', hoverBg: 'hover:bg-cyan-50' },
+  violet: { iconBg: 'bg-violet-100', iconText: 'text-violet-600', hoverBg: 'hover:bg-violet-50' },
+  amber: { iconBg: 'bg-amber-100', iconText: 'text-amber-600', hoverBg: 'hover:bg-amber-50' },
+  emerald: { iconBg: 'bg-emerald-100', iconText: 'text-emerald-600', hoverBg: 'hover:bg-emerald-50' },
+  rose: { iconBg: 'bg-rose-100', iconText: 'text-rose-600', hoverBg: 'hover:bg-rose-50' },
+  fuchsia: { iconBg: 'bg-fuchsia-100', iconText: 'text-fuchsia-600', hoverBg: 'hover:bg-fuchsia-50' },
+  sky: { iconBg: 'bg-sky-100', iconText: 'text-sky-600', hoverBg: 'hover:bg-sky-50' },
+  teal: { iconBg: 'bg-teal-100', iconText: 'text-teal-600', hoverBg: 'hover:bg-teal-50' },
 };
 
 export default function Home() {
@@ -87,7 +46,7 @@ export default function Home() {
   const totalCards = TRACKS.reduce((acc, track) => acc + track.deck.length, 0);
 
   return (
-    <main className="flex flex-col min-h-screen bg-paper-50 text-ink overflow-x-hidden">
+    <main className="flex flex-col min-h-screen bg-orange-50 text-slate-800 overflow-x-hidden">
 
       {/* === HERO SECTION === */}
       <div className="px-6 pt-safe">
@@ -97,27 +56,24 @@ export default function Home() {
           transition={{ duration: 0.6 }}
           className="pt-8 pb-6"
         >
-          {/* Greeting */}
-          <p className="text-ink-muted text-sm font-semibold mb-1">Bonjour,</p>
-          <h1 className="text-4xl font-display font-bold text-ink-dark mb-2">
+          <p className="text-slate-500 text-sm font-semibold mb-1">Bonjour,</p>
+          <h1 className="text-4xl font-display font-bold text-slate-900 mb-2">
             Miguel 👋
           </h1>
 
-          {/* Status Badge */}
           <div className="flex items-center gap-2 mt-4">
             <div className="relative">
-              <div className={`h-2.5 w-2.5 rounded-full transition-all ${isReady ? "bg-emerald-500" : "bg-ink-muted animate-pulse"
-                }`} />
+              <div className={`h-2.5 w-2.5 rounded-full transition-all ${isReady ? "bg-emerald-500" : "bg-slate-300 animate-pulse"}`} />
               {isReady && (
                 <div className="absolute inset-0 h-2.5 w-2.5 rounded-full bg-emerald-400 animate-ping opacity-40" />
               )}
             </div>
-            <span className="text-xs text-ink-muted font-medium">{dbStatus}</span>
+            <span className="text-xs text-slate-500 font-medium">{dbStatus}</span>
           </div>
         </motion.div>
       </div>
 
-      {/* === GAME MODE CARD (Featured) === */}
+      {/* === GAME MODE CARD === */}
       <div className="px-6 mb-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -134,12 +90,9 @@ export default function Home() {
               }}
             >
               <div className="relative z-10 flex items-center gap-5">
-                {/* Game Icon */}
                 <div className="p-4 rounded-2xl bg-white/20 backdrop-blur-sm">
                   <Gamepad2 className="w-10 h-10 text-white" />
                 </div>
-
-                {/* Content */}
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
                     <h3 className="font-bold text-2xl text-white">Le Mixeur</h3>
@@ -151,8 +104,6 @@ export default function Home() {
                     Quiz con todas las {totalCards} cartas
                   </p>
                 </div>
-
-                {/* Trophy */}
                 <Trophy className="w-8 h-8 text-white/70 group-hover:text-white transition-colors" />
               </div>
             </motion.div>
@@ -168,8 +119,8 @@ export default function Home() {
           transition={{ delay: 0.2 }}
           className="flex items-center justify-between"
         >
-          <h2 className="text-xl font-bold text-ink-dark">Pistas de Estudio</h2>
-          <span className="text-xs text-ink-muted font-semibold px-3 py-1 rounded-full bg-white border border-black/5">
+          <h2 className="text-xl font-bold text-slate-800">Pistas de Estudio</h2>
+          <span className="text-xs text-slate-500 font-semibold px-3 py-1 rounded-full bg-white border border-slate-200">
             {TRACKS.length} tracks
           </span>
         </motion.div>
@@ -183,10 +134,7 @@ export default function Home() {
           animate="visible"
           variants={{
             hidden: { opacity: 0 },
-            visible: {
-              opacity: 1,
-              transition: { staggerChildren: 0.05 }
-            }
+            visible: { opacity: 1, transition: { staggerChildren: 0.05 } }
           }}
         >
           {TRACKS.map((track) => {
@@ -205,33 +153,27 @@ export default function Home() {
                   <motion.div
                     whileHover={{ y: -4, scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className={`card-interactive group p-4 rounded-2xl transition-all duration-200 ${colors.hoverBg}`}
+                    className={`group p-4 rounded-2xl bg-white border border-slate-100 shadow-sm transition-all duration-200 ${colors.hoverBg}`}
                   >
-                    {/* Icon with colorful background */}
                     <div className={`${colors.iconBg} p-3 rounded-xl w-fit mb-3`}>
                       <IconComponent className={`w-6 h-6 ${colors.iconText}`} />
                     </div>
-
-                    {/* Content */}
                     <div className="mb-3">
-                      <h3 className="font-bold text-ink-dark text-sm mb-0.5">
+                      <h3 className="font-bold text-slate-800 text-sm mb-0.5">
                         {track.title}
                       </h3>
-                      <p className="text-[10px] text-ink-muted font-medium">
+                      <p className="text-[10px] text-slate-500 font-medium">
                         {track.titleFr}
                       </p>
                     </div>
-
-                    <p className="text-xs text-ink-muted leading-relaxed mb-3">
+                    <p className="text-xs text-slate-500 leading-relaxed mb-3 line-clamp-2">
                       {track.description}
                     </p>
-
-                    {/* Card Count */}
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-ink-muted font-semibold bg-black/5 px-2 py-1 rounded-full">
+                      <span className="text-xs text-slate-400 font-semibold bg-slate-50 px-2 py-1 rounded-full">
                         {track.deck.length} cartas
                       </span>
-                      <svg className="w-4 h-4 text-ink-muted/50 group-hover:text-primary group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 text-slate-300 group-hover:text-orange-500 group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
                     </div>
@@ -243,14 +185,14 @@ export default function Home() {
         </motion.div>
       </div>
 
-      {/* === BOTTOM NAVIGATION (Floating White Pill) === */}
+      {/* === BOTTOM NAVIGATION === */}
       <motion.div
         initial={{ y: 100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5, delay: 0.3 }}
         className="pb-safe mx-4 mb-4"
       >
-        <div className="pill-light rounded-3xl shadow-[0_4px_20px_rgba(0,0,0,0.08)]">
+        <div className="bg-white rounded-3xl shadow-xl border border-slate-100">
           <nav className="flex justify-around items-center py-4">
             <NavItem icon={<Zap className="w-5 h-5" />} label="Dojo" active />
             <NavItem icon={<BarChart3 className="w-5 h-5" />} label="Progreso" />
@@ -262,21 +204,10 @@ export default function Home() {
   );
 }
 
-function NavItem({
-  icon,
-  label,
-  active = false
-}: {
-  icon: React.ReactNode;
-  label: string;
-  active?: boolean
-}) {
+function NavItem({ icon, label, active = false }: { icon: React.ReactNode; label: string; active?: boolean }) {
   return (
     <button
-      className={`flex flex-col items-center gap-1.5 px-6 py-2 rounded-xl transition-all duration-200 btn-tactile ${active
-          ? "text-primary bg-orange-50"
-          : "text-ink-muted hover:text-ink"
-        }`}
+      className={`flex flex-col items-center gap-1.5 px-6 py-2 rounded-xl transition-all duration-200 ${active ? "text-orange-600 bg-orange-50" : "text-slate-400 hover:text-slate-800"}`}
     >
       {icon}
       <span className="text-[10px] font-bold uppercase tracking-wider">{label}</span>

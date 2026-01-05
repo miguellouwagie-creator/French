@@ -131,26 +131,26 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
 
     if (!card) {
         return (
-            <div className="h-full flex items-center justify-center bg-paper-50">
+            <div className="h-full flex items-center justify-center bg-orange-50">
                 <div className="text-center">
-                    <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-                    <p className="text-ink-muted text-sm">Cargando mazo...</p>
+                    <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                    <p className="text-slate-500 text-sm">Cargando mazo...</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="flex flex-col h-full items-center justify-between p-4 pb-safe bg-paper-50 text-ink overflow-hidden">
+        <div className="flex flex-col h-full items-center justify-between p-4 pb-safe bg-orange-50 text-slate-800 overflow-hidden">
 
             {/* === HEADER === */}
             <div className="w-full max-w-md">
-                <div className="pill-light rounded-2xl px-4 py-3">
+                <div className="bg-white border border-slate-200 shadow-sm rounded-2xl px-4 py-3">
                     <div className="flex items-center justify-between">
                         <Link href="/">
                             <motion.button
                                 whileTap={{ scale: 0.9 }}
-                                className="p-2 -ml-2 text-ink-muted hover:text-ink transition-colors"
+                                className="p-2 -ml-2 text-slate-400 hover:text-slate-800 transition-colors"
                             >
                                 <ArrowLeft className="w-5 h-5" />
                             </motion.button>
@@ -163,22 +163,22 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
                         <motion.button
                             whileTap={{ scale: 0.95 }}
                             onClick={() => setShowVoiceModal(true)}
-                            className="flex items-center gap-1.5 bg-white border border-black/8 rounded-xl px-3 py-2 text-xs shadow-sm"
+                            className="flex items-center gap-1.5 bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs shadow-sm hover:bg-slate-50"
                         >
                             <span>🎙️</span>
                         </motion.button>
                     </div>
 
                     <div className="mt-3 flex items-center gap-3">
-                        <div className="flex-1 h-1.5 bg-black/5 rounded-full overflow-hidden">
+                        <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
                             <motion.div
-                                className={`h-full ${isPhoneticLab ? 'bg-gradient-to-r from-fuchsia-500 to-fuchsia-600' : 'bg-gradient-to-r from-primary to-primary-light'}`}
+                                className={`h-full ${isPhoneticLab ? 'bg-gradient-to-r from-fuchsia-500 to-fuchsia-600' : 'bg-gradient-to-r from-orange-500 to-orange-400'}`}
                                 initial={{ width: 0 }}
                                 animate={{ width: `${((index + 1) / deck.length) * 100}%` }}
                                 transition={{ duration: 0.3 }}
                             />
                         </div>
-                        <span className="text-xs text-ink-muted font-semibold">
+                        <span className="text-xs text-slate-400 font-semibold">
                             {index + 1}/{deck.length}
                         </span>
                     </div>
@@ -197,11 +197,11 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
                         onClick={handleCardTap}
                         className="relative w-full aspect-[3/4] cursor-pointer"
                     >
-                        <div className="card-elevated-strong w-full h-full flex flex-col items-center justify-center p-8 relative overflow-hidden bg-white">
+                        <div className="bg-white border border-slate-200 shadow-[0_8px_30px_rgb(0,0,0,0.06)] rounded-[2rem] w-full h-full flex flex-col items-center justify-center p-8 relative overflow-hidden">
 
                             {/* Subtle emoji watermark */}
                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <span className="text-[8rem] opacity-[0.03] select-none">
+                                <span className="text-[8rem] opacity-[0.03] select-none grayscale">
                                     {card.emoji}
                                 </span>
                             </div>
@@ -216,8 +216,8 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
                                                 card.type === 'phonetic' ? 'Fonética' : 'Conector'}
                                 </div>
 
-                                {/* French Phrase - HUGE */}
-                                <h2 className="font-display text-4xl md:text-5xl font-semibold text-center leading-tight text-ink-dark px-2">
+                                {/* French Phrase - HUGE - FIXED COLOR */}
+                                <h2 className="font-display text-4xl md:text-5xl font-semibold text-center leading-tight text-slate-900 px-2 drop-shadow-sm">
                                     {card.french}
                                 </h2>
 
@@ -264,7 +264,10 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
                                             speakFrench(card.french, 0.9);
                                         }}
                                         disabled={isSpeaking}
-                                        className={`btn-primary rounded-full px-6 py-3 flex items-center gap-3 transition-all duration-300 shadow-lg ${isSpeaking && !isSlowMode ? 'glow-orange-intense scale-105' : ''}`}
+                                        className={`rounded-full px-6 py-3 flex items-center gap-3 transition-all duration-300 shadow-lg ${isSpeaking && !isSlowMode
+                                            ? 'bg-orange-600 text-white shadow-orange-500/30 scale-105'
+                                            : 'bg-slate-900 text-white shadow-slate-900/20 hover:bg-slate-800'
+                                            }`}
                                     >
                                         <Volume2 className={`w-5 h-5 ${isSpeaking && !isSlowMode ? 'animate-pulse' : ''}`} />
                                         <span className="text-sm font-semibold">
@@ -280,13 +283,13 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
                                             speakFrench(card.french, 0.65);
                                         }}
                                         disabled={isSpeaking}
-                                        className={`p-3 rounded-full flex items-center justify-center transition-all duration-300 border-2 shadow-md ${isSlowMode
-                                            ? 'border-amber-500 bg-amber-100 glow-amber'
-                                            : 'border-amber-300 bg-amber-50 hover:bg-amber-100 hover:border-amber-400'
+                                        className={`p-3 rounded-full flex items-center justify-center transition-all duration-300 border-2 shadow-sm ${isSlowMode
+                                            ? 'border-amber-500 bg-amber-100 text-amber-700'
+                                            : 'border-slate-200 bg-white text-slate-500 hover:border-amber-400 hover:text-amber-500'
                                             }`}
                                         title="Reproducción lenta"
                                     >
-                                        <Turtle className={`w-5 h-5 transition-all ${isSlowMode ? 'text-amber-600 animate-pulse' : 'text-amber-500'}`} />
+                                        <Turtle className={`w-5 h-5 ${isSlowMode ? 'animate-pulse' : ''}`} />
                                     </motion.button>
                                 </div>
 
@@ -295,7 +298,7 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
                                     <motion.p
                                         initial={{ opacity: 0, y: -5 }}
                                         animate={{ opacity: 1, y: 0 }}
-                                        className="text-xs text-amber-600 font-semibold bg-amber-50 px-3 py-1 rounded-full"
+                                        className="text-xs text-amber-700 font-semibold bg-amber-100 px-3 py-1 rounded-full"
                                     >
                                         🐢 Modo lento activo
                                     </motion.p>
@@ -309,9 +312,9 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
                                             animate={{ opacity: 1, y: 0, scale: 1 }}
                                             exit={{ opacity: 0, y: 10 }}
                                             transition={{ duration: 0.3 }}
-                                            className="bg-white border border-black/8 rounded-2xl px-6 py-4 mt-2 shadow-md"
+                                            className="bg-slate-50 border border-slate-200 rounded-2xl px-6 py-4 mt-2 shadow-inner"
                                         >
-                                            <p className="text-lg text-ink-muted text-center font-medium">
+                                            <p className="text-lg text-slate-700 text-center font-medium">
                                                 {card.meaning}
                                             </p>
                                         </motion.div>
@@ -323,7 +326,7 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
                                     <motion.p
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
-                                        className="text-xs text-ink-muted/50 mt-2"
+                                        className="text-xs text-slate-400 mt-2 font-medium"
                                     >
                                         Toca para ver traducción
                                     </motion.p>
@@ -347,7 +350,7 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
                             <motion.button
                                 whileTap={{ scale: 0.98 }}
                                 onClick={() => setShowTranslation(true)}
-                                className="w-full py-4 rounded-2xl border-2 border-black/10 bg-white text-ink-muted font-semibold hover:bg-gray-50 hover:border-black/15 transition-all shadow-sm"
+                                className="w-full py-4 rounded-2xl border-2 border-slate-200 bg-white text-slate-500 font-bold hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm"
                             >
                                 {isPhoneticLab ? 'Mostrar Significado 🎯' : 'Mostrar Traducción 👁️'}
                             </motion.button>
@@ -364,7 +367,7 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
                             <motion.button
                                 whileTap={{ scale: 0.95 }}
                                 onClick={nextCard}
-                                className="relative overflow-hidden rounded-2xl py-5 font-bold text-lg border-2 border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-600 transition-all shadow-sm"
+                                className="relative overflow-hidden rounded-2xl py-5 font-bold text-lg border-2 border-rose-100 bg-rose-50 text-rose-600 hover:bg-rose-100 transition-all shadow-sm"
                             >
                                 <span className="flex items-center justify-center gap-2">
                                     <span>Difícil</span>
@@ -375,7 +378,7 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
                             <motion.button
                                 whileTap={{ scale: 0.95 }}
                                 onClick={nextCard}
-                                className="relative overflow-hidden rounded-2xl py-5 font-bold text-lg bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-lg transition-all glow-success"
+                                className="relative overflow-hidden rounded-2xl py-5 font-bold text-lg bg-emerald-500 text-white shadow-lg shadow-emerald-200 transition-all hover:bg-emerald-600"
                             >
                                 <span className="flex items-center justify-center gap-2">
                                     <span>Fácil</span>
@@ -396,7 +399,7 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setShowVoiceModal(false)}
-                            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
+                            className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-40"
                         />
 
                         <motion.div
@@ -407,14 +410,14 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
                             className="fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-3xl max-h-[70vh] overflow-hidden shadow-2xl"
                         >
                             <div className="p-6">
-                                <div className="w-10 h-1 bg-black/10 rounded-full mx-auto mb-6" />
+                                <div className="w-10 h-1 bg-slate-200 rounded-full mx-auto mb-6" />
 
                                 <div className="flex items-center justify-between mb-6">
-                                    <h3 className="text-lg font-bold text-ink-dark">Seleccionar Voz</h3>
+                                    <h3 className="text-lg font-bold text-slate-800">Seleccionar Voz</h3>
                                     <motion.button
                                         whileTap={{ scale: 0.9 }}
                                         onClick={loadVoices}
-                                        className="bg-white border border-black/10 rounded-xl px-4 py-2 text-sm flex items-center gap-2 shadow-sm hover:bg-gray-50"
+                                        className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm flex items-center gap-2 shadow-sm text-slate-600 hover:bg-slate-100"
                                     >
                                         <RefreshCw className="w-4 h-4" />
                                         <span>Recargar</span>
@@ -423,7 +426,7 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
 
                                 <div className="overflow-y-auto max-h-[50vh] space-y-2 pb-safe">
                                     {voices.length === 0 && (
-                                        <p className="text-center text-ink-muted py-8">
+                                        <p className="text-center text-slate-400 py-8">
                                             Cargando voces...
                                         </p>
                                     )}
@@ -436,23 +439,23 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
                                                 setShowVoiceModal(false);
                                             }}
                                             className={`w-full flex items-center gap-3 p-4 rounded-xl transition-all ${selectedVoice?.name === v.name
-                                                ? 'bg-orange-50 border-2 border-primary shadow-md'
-                                                : 'bg-white border border-black/8 hover:bg-gray-50'
+                                                ? 'bg-orange-50 border-2 border-orange-500 shadow-sm'
+                                                : 'bg-white border border-slate-100 hover:bg-slate-50'
                                                 }`}
                                         >
                                             <span className="text-xl">
                                                 {v.lang.includes('fr') ? '🇫🇷' : '🌍'}
                                             </span>
                                             <div className="flex-1 text-left">
-                                                <p className="font-semibold text-ink-dark truncate">
+                                                <p className="font-semibold text-slate-800 truncate">
                                                     {v.name}
                                                 </p>
-                                                <p className="text-xs text-ink-muted">
+                                                <p className="text-xs text-slate-500">
                                                     {v.lang}
                                                 </p>
                                             </div>
                                             {selectedVoice?.name === v.name && (
-                                                <span className="text-primary font-bold">✓</span>
+                                                <span className="text-orange-600 font-bold">✓</span>
                                             )}
                                         </motion.button>
                                     ))}

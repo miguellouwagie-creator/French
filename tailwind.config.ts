@@ -4,7 +4,7 @@ const config: Config = {
     content: [
         "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
         "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-        "./src/Components/**/*.{js,ts,jsx,tsx,mdx}",
+        "./src/Components/**/*.{js,ts,jsx,tsx,mdx}", // Cubrimos ambas mayúsculas/minúsculas
         "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     ],
     theme: {
@@ -14,23 +14,23 @@ const config: Config = {
                 sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
             },
             colors: {
-                // L'Atelier Light Theme
+                // TEMA L'ATELIER (Luz & Energía)
                 paper: {
-                    50: "#fff7ed",   // orange-50 - Warm background
-                    100: "#ffedd5",  // orange-100 - Subtle warmth
+                    50: "#fff7ed",   // Fondo Crema Suave
+                    100: "#ffedd5",  // Acento Cálido
                 },
                 ink: {
-                    DEFAULT: "#1e293b", // slate-800 - Primary text
-                    dark: "#0f172a",    // slate-900 - Headers
-                    muted: "#64748b",   // slate-500 - Secondary text
+                    DEFAULT: "#1e293b", // Texto Principal (Azul Tinta)
+                    dark: "#0f172a",    // Títulos
+                    muted: "#64748b",   // Texto Secundario
                 },
                 primary: {
-                    DEFAULT: "#ea580c", // orange-600 - Main actions
-                    light: "#f97316",   // orange-500 - Hover states
-                    dark: "#c2410c",    // orange-700 - Active states
+                    DEFAULT: "#ea580c", // Naranja Acción
+                    light: "#f97316",
+                    dark: "#c2410c",
                 },
+                // Colores para los iconos de las pistas
                 accent: {
-                    // Track-specific vibrant colors
                     cyan: "#06b6d4",
                     violet: "#8b5cf6",
                     amber: "#f59e0b",
@@ -40,7 +40,7 @@ const config: Config = {
                     sky: "#0ea5e9",
                     teal: "#14b8a6",
                 },
-                // Keep original brand for backwards compatibility
+                // Compatibilidad con diseño anterior
                 brand: {
                     bg: "#fff7ed",
                     surface: "white",
