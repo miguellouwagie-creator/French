@@ -44,7 +44,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={`${playfair.variable} ${inter.variable}`}>
+    // ✨ AQUÍ ESTÁ EL ARREGLO: suppressHydrationWarning
+    <html lang="es" suppressHydrationWarning className={`${playfair.variable} ${inter.variable}`}>
       <body className="font-sans antialiased selection:bg-cyan-400/30 selection:text-white">
         {/* Ambient Light Effects */}
         <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
