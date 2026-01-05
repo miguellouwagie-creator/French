@@ -1,52 +1,12 @@
 "use client";
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-
-// --- DATA: MAZO DE SUPERVIVENCIA A1 (30 CARTAS) ---
-const SURVIVAL_DECK = [
-    // SALUDOS & BÁSICOS
-    { id: '1', emoji: '👋', french: 'Bonjour, ça va?', meaning: 'Hola, ¿qué tal?', type: 'phrase' },
-    { id: '2', emoji: '🌙', french: 'Bonne soirée', meaning: 'Que tengas buena noche', type: 'phrase' },
-    { id: '3', emoji: '🙏', french: 'Merci beaucoup', meaning: 'Muchas gracias', type: 'phrase' },
-    { id: '4', emoji: '🤷', french: 'Je ne comprends pas', meaning: 'No entiendo', type: 'phrase' },
-    { id: '5', emoji: '🐌', french: 'Plus lentement, s\'il vous plaît', meaning: 'Más despacio, por favor', type: 'phrase' },
-
-    // COMIDA & BEBIDA
-    { id: '6', emoji: '☕', french: 'Un café, s\'il vous plaît', meaning: 'Un café, por favor', type: 'phrase' },
-    { id: '7', emoji: '🥐', french: 'Je voudrais un croissant', meaning: 'Quisiera un croissant', type: 'phrase' },
-    { id: '8', emoji: '💳', french: 'L\'addition, s\'il vous plaît', meaning: 'La cuenta, por favor', type: 'phrase' },
-    { id: '9', emoji: '💧', french: 'Une carafe d\'eau', meaning: 'Una jarra de agua (gratis)', type: 'phrase' },
-    { id: '10', emoji: '🍷', french: 'Un verre de vin rouge', meaning: 'Una copa de vino tinto', type: 'phrase' },
-
-    // DIRECCIONES
-    { id: '11', emoji: '📍', french: 'Où sont les toilettes ?', meaning: '¿Dónde está el baño?', type: 'phrase' },
-    { id: '12', emoji: '🚇', french: 'Je cherche le métro', meaning: 'Busco el metro', type: 'phrase' },
-    { id: '13', emoji: '➡️', french: 'C\'est à droite', meaning: 'Está a la derecha', type: 'phrase' },
-    { id: '14', emoji: '⬅️', french: 'C\'est à gauche', meaning: 'Está a la izquierda', type: 'phrase' },
-
-    // VOCABULARIO DE IMPACTO
-    { id: '15', emoji: '🏠', french: 'La maison', meaning: 'La casa', type: 'vocab' },
-    { id: '16', emoji: '🚗', french: 'La voiture', meaning: 'El coche', type: 'vocab' },
-    { id: '17', emoji: '🧀', french: 'Le fromage', meaning: 'El queso', type: 'vocab' },
-    { id: '18', emoji: '🥖', french: 'Le pain', meaning: 'El pan', type: 'vocab' },
-    { id: '19', emoji: '🕰️', french: 'Quelle heure est-il ?', meaning: '¿Qué hora es?', type: 'phrase' },
-    { id: '20', emoji: '💶', french: 'C\'est combien ?', meaning: '¿Cuánto cuesta?', type: 'phrase' },
-
-    // EMERGENCIAS / SOCIAL
-    { id: '21', emoji: '🚑', french: 'Aidez-moi !', meaning: '¡Ayúdenme!', type: 'phrase' },
-    { id: '22', emoji: '💊', french: 'J\'ai besoin d\'un médecin', meaning: 'Necesito un médico', type: 'phrase' },
-    { id: '23', emoji: '🇪🇸', french: 'Parlez-vous espagnol ?', meaning: '¿Habla español?', type: 'phrase' },
-    { id: '24', emoji: '🍺', french: 'Santé !', meaning: '¡Salud! (Brindis)', type: 'phrase' },
-    { id: '25', emoji: '👋', french: 'Au revoir', meaning: 'Adiós', type: 'phrase' },
-    { id: '26', emoji: '🚆', french: 'Le train part quand ?', meaning: '¿Cuándo sale el tren?', type: 'phrase' },
-    { id: '27', emoji: '🏨', french: 'J\'ai une réservation', meaning: 'Tengo una reserva', type: 'phrase' },
-    { id: '28', emoji: '🗝️', french: 'La clé', meaning: 'La llave', type: 'vocab' },
-    { id: '29', emoji: '🌧️', french: 'Il pleut', meaning: 'Está lloviendo', type: 'vocab' },
-    { id: '30', emoji: '❤️', french: 'J\'adore ça', meaning: 'Me encanta esto', type: 'phrase' }
-];
+import { ArrowLeft, Volume2, RefreshCw } from 'lucide-react';
+import Link from 'next/link';
+import { getTrackById, getDefaultTrack, type Track, type Card } from '../lib/data';
 
 // Algoritmo de mezcla aleatoria (Fisher-Yates)
-const shuffleArray = (array: any[]) => {
+const shuffleArray = <T,>(array: T[]): T[] => {
     const newArr = [...array];
     for (let i = newArr.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -55,8 +15,14 @@ const shuffleArray = (array: any[]) => {
     return newArr;
 };
 
-export default function PhoneticDojo() {
-    const [deck, setDeck] = useState(SURVIVAL_DECK);
+interface PhoneticDojoProps {
+    trackId?: string;
+}
+
+export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps) {
+    // Load the track
+    const [track, setTrack] = useState<Track>(() => getTrackById(trackId) || getDefaultTrack());
+    const [deck, setDeck] = useState<Card[]>([]);
     const [index, setIndex] = useState(0);
     const [showTranslation, setShowTranslation] = useState(false);
     const [isSpeaking, setIsSpeaking] = useState(false);
@@ -65,10 +31,15 @@ export default function PhoneticDojo() {
     const [showVoiceModal, setShowVoiceModal] = useState(false);
     const [cardKey, setCardKey] = useState(0);
 
-    // Mezclar cartas al inicio
+    // Load track and shuffle deck when trackId changes
     useEffect(() => {
-        setDeck(shuffleArray(SURVIVAL_DECK));
-    }, []);
+        const loadedTrack = getTrackById(trackId) || getDefaultTrack();
+        setTrack(loadedTrack);
+        setDeck(shuffleArray(loadedTrack.deck));
+        setIndex(0);
+        setShowTranslation(false);
+        setCardKey(prev => prev + 1);
+    }, [trackId]);
 
     const card = deck[index];
 
@@ -129,7 +100,6 @@ export default function PhoneticDojo() {
     const nextCard = () => {
         setShowTranslation(false);
         setCardKey(prev => prev + 1);
-        // Avanzar infinito circular
         setIndex((prev) => (prev + 1) % deck.length);
     };
 
@@ -139,68 +109,109 @@ export default function PhoneticDojo() {
         }
     };
 
+    // Color mapping for track badge
+    const trackColors: Record<string, string> = {
+        cyan: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',
+        violet: 'bg-violet-500/20 text-violet-400 border-violet-500/30',
+        amber: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
+        emerald: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
+        rose: 'bg-rose-500/20 text-rose-400 border-rose-500/30',
+    };
+
+    if (!card) {
+        return (
+            <div className="h-full flex items-center justify-center">
+                <div className="text-center">
+                    <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+                    <p className="text-brand-muted text-sm">Cargando mazo...</p>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="flex flex-col h-full items-center justify-between p-4 pb-safe bg-transparent text-brand-text overflow-hidden">
 
-            {/* === HEADER: Progress + Voice Control === */}
+            {/* === HEADER === */}
             <div className="w-full max-w-md">
-                <div className="glass-pill rounded-2xl px-4 py-3 flex items-center justify-between">
-                    {/* Progress Badge */}
-                    <div className="flex items-center gap-3">
-                        <div className="text-[10px] font-bold uppercase tracking-widest text-brand-muted">
-                            Survival A1
+                <div className="glass-pill rounded-2xl px-4 py-3">
+                    {/* Top Row: Back + Track Name + Voice */}
+                    <div className="flex items-center justify-between">
+                        {/* Back Button */}
+                        <Link href="/">
+                            <motion.button
+                                whileTap={{ scale: 0.9 }}
+                                className="p-2 -ml-2 text-brand-muted hover:text-white transition-colors"
+                            >
+                                <ArrowLeft className="w-5 h-5" />
+                            </motion.button>
+                        </Link>
+
+                        {/* Track Badge */}
+                        <div className={`px-3 py-1.5 rounded-full text-xs font-bold border ${trackColors[track.color] || trackColors.cyan}`}>
+                            {track.title}
                         </div>
-                        <div className="glass-card rounded-full px-3 py-1 text-xs font-bold text-cyan-400">
-                            {index + 1} / {deck.length}
-                        </div>
+
+                        {/* Voice Selector */}
+                        <motion.button
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => setShowVoiceModal(true)}
+                            className="flex items-center gap-1.5 glass-card rounded-xl px-3 py-2 text-xs"
+                        >
+                            <span>🎙️</span>
+                        </motion.button>
                     </div>
 
-                    {/* Voice Selector Trigger */}
-                    <motion.button
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => setShowVoiceModal(true)}
-                        className="flex items-center gap-2 glass-card rounded-xl px-3 py-2 text-xs"
-                    >
-                        <span>🎙️</span>
-                        <span className="text-brand-muted max-w-[80px] truncate">
-                            {selectedVoice?.name.slice(0, 12) || 'Voz...'}
+                    {/* Progress Bar */}
+                    <div className="mt-3 flex items-center gap-3">
+                        <div className="flex-1 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                            <motion.div
+                                className="h-full bg-gradient-to-r from-cyan-400 to-cyan-500"
+                                initial={{ width: 0 }}
+                                animate={{ width: `${((index + 1) / deck.length) * 100}%` }}
+                                transition={{ duration: 0.3 }}
+                            />
+                        </div>
+                        <span className="text-xs text-brand-muted font-medium">
+                            {index + 1}/{deck.length}
                         </span>
-                    </motion.button>
+                    </div>
                 </div>
             </div>
 
             {/* === THE CARD === */}
-            <div className="flex-1 flex items-center justify-center w-full max-w-md py-6">
+            <div className="flex-1 flex items-center justify-center w-full max-w-md py-4">
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={cardKey}
-                        initial={{ opacity: 0, scale: 0.9, rotateY: -15 }}
-                        animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-                        exit={{ opacity: 0, scale: 0.9, x: -100 }}
-                        transition={{ duration: 0.4, ease: "easeOut" }}
+                        initial={{ opacity: 0, scale: 0.9, x: 50 }}
+                        animate={{ opacity: 1, scale: 1, x: 0 }}
+                        exit={{ opacity: 0, scale: 0.9, x: -50 }}
+                        transition={{ duration: 0.35, ease: "easeOut" }}
                         onClick={handleCardTap}
                         className="relative w-full aspect-[3/4] cursor-pointer"
                     >
-                        {/* Card Container */}
-                        <div className="glass-card-elevated rounded-[2rem] w-full h-full flex flex-col items-center justify-center p-8 relative overflow-hidden">
+                        <div className="glass-card-elevated rounded-[2rem] w-full h-full flex flex-col items-center justify-center p-6 relative overflow-hidden">
 
                             {/* Emoji Watermark */}
                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <span className="text-[12rem] opacity-[0.07] blur-[1px] select-none">
+                                <span className="text-[10rem] opacity-[0.06] blur-[2px] select-none">
                                     {card.emoji}
                                 </span>
                             </div>
 
                             {/* Content */}
-                            <div className="relative z-10 flex flex-col items-center justify-center h-full gap-6">
+                            <div className="relative z-10 flex flex-col items-center justify-center h-full gap-5 w-full">
 
                                 {/* Type Badge */}
                                 <div className="glass-pill rounded-full px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest text-cyan-400">
-                                    {card.type === 'phrase' ? 'Frase' : 'Vocabulario'}
+                                    {card.type === 'phrase' ? 'Frase' :
+                                        card.type === 'vocab' ? 'Vocabulario' :
+                                            card.type === 'verb' ? 'Verbo' : 'Conector'}
                                 </div>
 
-                                {/* French Phrase - HUGE Serif */}
-                                <h2 className="font-display text-3xl md:text-4xl font-semibold text-center leading-tight text-white px-4">
+                                {/* French Phrase - HUGE */}
+                                <h2 className="font-display text-4xl md:text-5xl font-semibold text-center leading-tight text-white px-2">
                                     {card.french}
                                 </h2>
 
@@ -217,9 +228,7 @@ export default function PhoneticDojo() {
                                             : 'hover:bg-white/10'
                                         }`}
                                 >
-                                    <span className={`text-xl ${isSpeaking ? 'animate-pulse' : ''}`}>
-                                        🔊
-                                    </span>
+                                    <Volume2 className={`w-5 h-5 ${isSpeaking ? 'animate-pulse text-cyan-400' : 'text-white'}`} />
                                     <span className="text-sm font-medium text-white">
                                         {isSpeaking ? 'Escuchando...' : 'Escuchar'}
                                     </span>
@@ -258,20 +267,24 @@ export default function PhoneticDojo() {
                 </AnimatePresence>
             </div>
 
-            {/* === FEEDBACK BUTTONS (Thumb Zone) === */}
+            {/* === FEEDBACK BUTTONS === */}
             <div className="w-full max-w-md pb-4">
                 <AnimatePresence mode="wait">
                     {!showTranslation ? (
                         <motion.div
-                            key="hint"
+                            key="ghost"
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -10 }}
-                            className="text-center py-4"
                         >
-                            <p className="text-sm text-brand-muted">
-                                Escucha y repite antes de revelar 🎯
-                            </p>
+                            {/* Ghost Show Translation Button */}
+                            <motion.button
+                                whileTap={{ scale: 0.98 }}
+                                onClick={() => setShowTranslation(true)}
+                                className="w-full py-4 rounded-2xl border border-white/20 text-brand-muted font-medium hover:bg-white/5 transition-all"
+                            >
+                                Mostrar Traducción 👁️
+                            </motion.button>
                         </motion.div>
                     ) : (
                         <motion.div
@@ -286,13 +299,9 @@ export default function PhoneticDojo() {
                             <motion.button
                                 whileTap={{ scale: 0.95 }}
                                 onClick={nextCard}
-                                className="relative overflow-hidden rounded-2xl py-5 font-bold text-lg transition-all duration-200"
-                                style={{
-                                    background: 'linear-gradient(135deg, rgba(248, 113, 113, 0.2) 0%, rgba(239, 68, 68, 0.1) 100%)',
-                                    border: '1px solid rgba(248, 113, 113, 0.3)',
-                                }}
+                                className="relative overflow-hidden rounded-2xl py-5 font-bold text-lg border border-rose-500/30 bg-rose-500/10 hover:bg-rose-500/20 transition-all"
                             >
-                                <span className="relative z-10 flex items-center justify-center gap-2 text-red-400">
+                                <span className="flex items-center justify-center gap-2 text-rose-400">
                                     <span>Difícil</span>
                                     <span className="text-xl">🧠</span>
                                 </span>
@@ -302,12 +311,12 @@ export default function PhoneticDojo() {
                             <motion.button
                                 whileTap={{ scale: 0.95 }}
                                 onClick={nextCard}
-                                className="relative overflow-hidden rounded-2xl py-5 font-bold text-lg glow-success transition-all duration-200"
+                                className="relative overflow-hidden rounded-2xl py-5 font-bold text-lg glow-success transition-all"
                                 style={{
                                     background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
                                 }}
                             >
-                                <span className="relative z-10 flex items-center justify-center gap-2 text-slate-900">
+                                <span className="flex items-center justify-center gap-2 text-slate-900">
                                     <span>Fácil</span>
                                     <span className="text-xl">🚀</span>
                                 </span>
@@ -321,7 +330,6 @@ export default function PhoneticDojo() {
             <AnimatePresence>
                 {showVoiceModal && (
                     <>
-                        {/* Backdrop */}
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -330,7 +338,6 @@ export default function PhoneticDojo() {
                             className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
                         />
 
-                        {/* Modal */}
                         <motion.div
                             initial={{ opacity: 0, y: 100 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -339,22 +346,20 @@ export default function PhoneticDojo() {
                             className="fixed bottom-0 left-0 right-0 z-50 glass-card-elevated rounded-t-[2rem] max-h-[70vh] overflow-hidden"
                         >
                             <div className="p-6">
-                                {/* Handle */}
                                 <div className="w-10 h-1 bg-white/20 rounded-full mx-auto mb-6" />
 
-                                {/* Header */}
                                 <div className="flex items-center justify-between mb-6">
                                     <h3 className="text-lg font-bold text-white">Seleccionar Voz</h3>
                                     <motion.button
                                         whileTap={{ scale: 0.9 }}
                                         onClick={loadVoices}
-                                        className="glass-pill rounded-xl px-4 py-2 text-sm"
+                                        className="glass-pill rounded-xl px-4 py-2 text-sm flex items-center gap-2"
                                     >
-                                        🔄 Recargar
+                                        <RefreshCw className="w-4 h-4" />
+                                        <span>Recargar</span>
                                     </motion.button>
                                 </div>
 
-                                {/* Voice List */}
                                 <div className="overflow-y-auto max-h-[50vh] space-y-2 pb-safe">
                                     {voices.length === 0 && (
                                         <p className="text-center text-brand-muted py-8">
