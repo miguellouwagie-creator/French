@@ -6,7 +6,8 @@ import { motion } from 'framer-motion';
 import { TRACKS } from '../lib/data';
 import {
   Shield, Package, Zap, Briefcase, Link as LinkIcon,
-  BarChart3, Settings, AudioWaveform, Gamepad2, Trophy
+  BarChart3, Settings, AudioWaveform, Gamepad2, Trophy,
+  Table2, Puzzle
 } from 'lucide-react';
 
 // Icon mapping for dynamic rendering
@@ -17,6 +18,8 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Briefcase,
   Link: LinkIcon,
   AudioWaveform,
+  Table2,
+  Puzzle,
 };
 
 // Color mapping for track cards
@@ -56,6 +59,18 @@ const colorMap: Record<string, { bg: string; border: string; text: string; glow:
     border: 'border-fuchsia-500/30',
     text: 'text-fuchsia-400',
     glow: 'group-hover:shadow-[0_0_30px_rgba(217,70,239,0.3)]',
+  },
+  sky: {
+    bg: 'from-sky-500/20 to-sky-600/5',
+    border: 'border-sky-500/30',
+    text: 'text-sky-400',
+    glow: 'group-hover:shadow-[0_0_30px_rgba(56,189,248,0.3)]',
+  },
+  teal: {
+    bg: 'from-teal-500/20 to-teal-600/5',
+    border: 'border-teal-500/30',
+    text: 'text-teal-400',
+    glow: 'group-hover:shadow-[0_0_30px_rgba(20,184,166,0.3)]',
   },
 };
 

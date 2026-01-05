@@ -8,11 +8,15 @@ export interface Card {
     emoji: string;
     french: string;
     meaning: string;
-    type: 'phrase' | 'vocab' | 'verb' | 'connector' | 'phonetic';
+    type: 'phrase' | 'vocab' | 'verb' | 'connector' | 'phonetic' | 'table' | 'anatomy';
     // Optional fields for Phonetic Lab
     phoneticGuide?: string;  // e.g., "wa-ZO"
     mnemonic?: string;       // e.g., "Piensa en 'Guasa' para la OI"
     trap?: string;           // e.g., "La S final es muda"
+    // Optional fields for Anatomy mode
+    segments?: { text: string; meaning: string; grammarNote?: string }[];
+    // Optional category for table mode
+    category?: string;
 }
 
 export interface Track {
@@ -23,6 +27,7 @@ export interface Track {
     description: string;
     color: string; // Tailwind color class
     deck: Card[];
+    mode: 'flashcard' | 'table' | 'anatomy';
 }
 
 // =====================================================
@@ -222,6 +227,114 @@ const PHONETIC_DECK: Card[] = [
 ];
 
 // =====================================================
+// TRACK 7: VOCABULARY ATLAS (Visual Table Mode)
+// =====================================================
+const VOCABULARY_ATLAS_DECK: Card[] = [
+    // Days of the Week
+    { id: 'atlas-1', emoji: '📅', french: 'Lundi', meaning: 'Lunes', type: 'table', category: 'Días de la Semana' },
+    { id: 'atlas-2', emoji: '📅', french: 'Mardi', meaning: 'Martes', type: 'table', category: 'Días de la Semana' },
+    { id: 'atlas-3', emoji: '📅', french: 'Mercredi', meaning: 'Miércoles', type: 'table', category: 'Días de la Semana' },
+    { id: 'atlas-4', emoji: '📅', french: 'Jeudi', meaning: 'Jueves', type: 'table', category: 'Días de la Semana' },
+    { id: 'atlas-5', emoji: '📅', french: 'Vendredi', meaning: 'Viernes', type: 'table', category: 'Días de la Semana' },
+    { id: 'atlas-6', emoji: '📅', french: 'Samedi', meaning: 'Sábado', type: 'table', category: 'Días de la Semana' },
+    { id: 'atlas-7', emoji: '📅', french: 'Dimanche', meaning: 'Domingo', type: 'table', category: 'Días de la Semana' },
+    // Numbers 1-10
+    { id: 'atlas-8', emoji: '1️⃣', french: 'Un', meaning: 'Uno', type: 'table', category: 'Números' },
+    { id: 'atlas-9', emoji: '2️⃣', french: 'Deux', meaning: 'Dos', type: 'table', category: 'Números' },
+    { id: 'atlas-10', emoji: '3️⃣', french: 'Trois', meaning: 'Tres', type: 'table', category: 'Números' },
+    { id: 'atlas-11', emoji: '4️⃣', french: 'Quatre', meaning: 'Cuatro', type: 'table', category: 'Números' },
+    { id: 'atlas-12', emoji: '5️⃣', french: 'Cinq', meaning: 'Cinco', type: 'table', category: 'Números' },
+    { id: 'atlas-13', emoji: '6️⃣', french: 'Six', meaning: 'Seis', type: 'table', category: 'Números' },
+    { id: 'atlas-14', emoji: '7️⃣', french: 'Sept', meaning: 'Siete', type: 'table', category: 'Números' },
+    { id: 'atlas-15', emoji: '8️⃣', french: 'Huit', meaning: 'Ocho', type: 'table', category: 'Números' },
+    { id: 'atlas-16', emoji: '9️⃣', french: 'Neuf', meaning: 'Nueve', type: 'table', category: 'Números' },
+    { id: 'atlas-17', emoji: '🔟', french: 'Dix', meaning: 'Diez', type: 'table', category: 'Números' },
+    // Colors
+    { id: 'atlas-18', emoji: '⚪', french: 'Blanc', meaning: 'Blanco', type: 'table', category: 'Colores' },
+    { id: 'atlas-19', emoji: '⚫', french: 'Noir', meaning: 'Negro', type: 'table', category: 'Colores' },
+    { id: 'atlas-20', emoji: '🔴', french: 'Rouge', meaning: 'Rojo', type: 'table', category: 'Colores' },
+    { id: 'atlas-21', emoji: '🔵', french: 'Bleu', meaning: 'Azul', type: 'table', category: 'Colores' },
+    { id: 'atlas-22', emoji: '🟢', french: 'Vert', meaning: 'Verde', type: 'table', category: 'Colores' },
+    { id: 'atlas-23', emoji: '🟡', french: 'Jaune', meaning: 'Amarillo', type: 'table', category: 'Colores' },
+    { id: 'atlas-24', emoji: '🟠', french: 'Orange', meaning: 'Naranja', type: 'table', category: 'Colores' },
+    { id: 'atlas-25', emoji: '🟣', french: 'Violet', meaning: 'Violeta', type: 'table', category: 'Colores' },
+    { id: 'atlas-26', emoji: '🩷', french: 'Rose', meaning: 'Rosa', type: 'table', category: 'Colores' },
+    { id: 'atlas-27', emoji: '🟤', french: 'Marron', meaning: 'Marrón', type: 'table', category: 'Colores' },
+    { id: 'atlas-28', emoji: '🩶', french: 'Gris', meaning: 'Gris', type: 'table', category: 'Colores' },
+];
+
+// =====================================================
+// TRACK 8: PHRASE ANATOMY (Sentence Deconstruction)
+// =====================================================
+const PHRASE_ANATOMY_DECK: Card[] = [
+    {
+        id: 'anat-1',
+        emoji: '🍷',
+        french: 'Je voudrais un verre de vin rouge.',
+        meaning: 'Quisiera un vaso de vino tinto.',
+        type: 'anatomy',
+        segments: [
+            { text: 'Je', meaning: 'Yo', grammarNote: 'Pronombre personal' },
+            { text: 'voudrais', meaning: 'quisiera', grammarNote: 'Condicional de cortesía (vouloir)' },
+            { text: 'un verre', meaning: 'un vaso', grammarNote: 'Artículo indefinido + sustantivo' },
+            { text: 'de vin rouge', meaning: 'de vino tinto', grammarNote: 'Preposición + sustantivo + adjetivo (color al final)' },
+        ],
+    },
+    {
+        id: 'anat-2',
+        emoji: '🎒',
+        french: 'Est-ce que tu peux m\'aider, s\'il te plaît?',
+        meaning: '¿Puedes ayudarme, por favor?',
+        type: 'anatomy',
+        segments: [
+            { text: 'Est-ce que', meaning: '¿...?', grammarNote: 'Partícula interrogativa formal' },
+            { text: 'tu peux', meaning: 'tú puedes', grammarNote: 'Pronombre + verbo pouvoir (presente)' },
+            { text: 'm\'aider', meaning: 'ayudarme', grammarNote: 'Pronombre reflexivo + infinitivo' },
+            { text: 's\'il te plaît', meaning: 'por favor', grammarNote: 'Fórmula de cortesía (informal tú)' },
+        ],
+    },
+    {
+        id: 'anat-3',
+        emoji: '🏠',
+        french: 'Je suis allé chez mes parents hier soir.',
+        meaning: 'Fui a casa de mis padres anoche.',
+        type: 'anatomy',
+        segments: [
+            { text: 'Je suis allé', meaning: 'Yo fui / He ido', grammarNote: 'Passé composé con être (verbo de movimiento)' },
+            { text: 'chez', meaning: 'a casa de', grammarNote: 'Preposición especial para lugares personales' },
+            { text: 'mes parents', meaning: 'mis padres', grammarNote: 'Adjetivo posesivo plural + sustantivo' },
+            { text: 'hier soir', meaning: 'anoche', grammarNote: 'Expresión temporal (ayer + noche)' },
+        ],
+    },
+    {
+        id: 'anat-4',
+        emoji: '☔',
+        french: 'Il fait beau aujourd\'hui, mais il va pleuvoir demain.',
+        meaning: 'Hace buen tiempo hoy, pero va a llover mañana.',
+        type: 'anatomy',
+        segments: [
+            { text: 'Il fait beau', meaning: 'Hace buen tiempo', grammarNote: 'Expresión impersonal del clima' },
+            { text: 'aujourd\'hui', meaning: 'hoy', grammarNote: 'Adverbio de tiempo' },
+            { text: 'mais', meaning: 'pero', grammarNote: 'Conjunción adversativa' },
+            { text: 'il va pleuvoir', meaning: 'va a llover', grammarNote: 'Futuro próximo (aller + infinitivo)' },
+            { text: 'demain', meaning: 'mañana', grammarNote: 'Adverbio de tiempo' },
+        ],
+    },
+    {
+        id: 'anat-5',
+        emoji: '🍽️',
+        french: 'Qu\'est-ce que vous prenez comme dessert?',
+        meaning: '¿Qué toman de postre?',
+        type: 'anatomy',
+        segments: [
+            { text: 'Qu\'est-ce que', meaning: '¿Qué...?', grammarNote: 'Partícula interrogativa para objetos' },
+            { text: 'vous prenez', meaning: 'ustedes toman', grammarNote: 'Pronombre formal + verbo prendre' },
+            { text: 'comme dessert', meaning: 'de postre', grammarNote: 'comme = como/de (en contexto de menú)' },
+        ],
+    },
+];
+
+// =====================================================
 // EXPORTED TRACKS COLLECTION
 // =====================================================
 export const TRACKS: Track[] = [
@@ -233,6 +346,7 @@ export const TRACKS: Track[] = [
         description: 'Frases esenciales para sobrevivir en Francia',
         color: 'cyan',
         deck: SURVIVAL_DECK,
+        mode: 'flashcard',
     },
     {
         id: 'objects',
@@ -242,6 +356,7 @@ export const TRACKS: Track[] = [
         description: 'Sustantivos de alta frecuencia',
         color: 'violet',
         deck: OBJECTS_DECK,
+        mode: 'flashcard',
     },
     {
         id: 'verbs',
@@ -251,6 +366,7 @@ export const TRACKS: Track[] = [
         description: 'Verbos conjugados en contexto',
         color: 'amber',
         deck: VERBS_DECK,
+        mode: 'flashcard',
     },
     {
         id: 'corporate',
@@ -260,6 +376,7 @@ export const TRACKS: Track[] = [
         description: 'Frases profesionales para el trabajo',
         color: 'emerald',
         deck: CORPORATE_DECK,
+        mode: 'flashcard',
     },
     {
         id: 'glue',
@@ -269,6 +386,7 @@ export const TRACKS: Track[] = [
         description: 'Palabras de enlace y conectores',
         color: 'rose',
         deck: GLUE_DECK,
+        mode: 'flashcard',
     },
     {
         id: 'phonetic',
@@ -278,6 +396,27 @@ export const TRACKS: Track[] = [
         description: 'Palabras difíciles con guía de pronunciación',
         color: 'fuchsia',
         deck: PHONETIC_DECK,
+        mode: 'flashcard',
+    },
+    {
+        id: 'atlas',
+        title: 'Vocabulary Atlas',
+        titleFr: 'Le Tableau',
+        icon: 'Table2',
+        description: 'Días, números y colores en lista visual',
+        color: 'sky',
+        deck: VOCABULARY_ATLAS_DECK,
+        mode: 'table',
+    },
+    {
+        id: 'anatomy',
+        title: 'Phrase Anatomy',
+        titleFr: 'L\'Anatomie',
+        icon: 'Puzzle',
+        description: 'Deconstrucción de frases complejas',
+        color: 'teal',
+        deck: PHRASE_ANATOMY_DECK,
+        mode: 'anatomy',
     },
 ];
 

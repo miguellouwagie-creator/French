@@ -2,11 +2,27 @@
 import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import PhoneticDojo from '@/Components/PhoneticDojo';
+import VisualTable from '@/Components/VisualTable';
+import SentenceAnatomy from '@/Components/SentenceAnatomy';
+import { getTrackById, getDefaultTrack } from '@/lib/data';
 
 function DojoContent() {
     const searchParams = useSearchParams();
     const trackId = searchParams.get('track') || 'survival';
 
+    // Get the track
+    const track = getTrackById(trackId) || getDefaultTrack();
+
+    // Route based on track mode
+    if (track.mode === 'table') {
+        return <VisualTable track={track} />;
+    }
+
+    if (track.mode === 'anatomy') {
+        return <SentenceAnatomy track={track} />;
+    }
+
+    // Default: flashcard mode
     return <PhoneticDojo trackId={trackId} />;
 }
 
