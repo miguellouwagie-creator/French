@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // --- DATA: MAZO DE SUPERVIVENCIA A1 (30 CARTAS) ---
 const SURVIVAL_DECK = [
@@ -61,6 +62,8 @@ export default function PhoneticDojo() {
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
     const [selectedVoice, setSelectedVoice] = useState<SpeechSynthesisVoice | null>(null);
+    const [showVoiceModal, setShowVoiceModal] = useState(false);
+    const [cardKey, setCardKey] = useState(0);
 
     // Mezclar cartas al inicio
     useEffect(() => {
@@ -125,102 +128,274 @@ export default function PhoneticDojo() {
 
     const nextCard = () => {
         setShowTranslation(false);
+        setCardKey(prev => prev + 1);
         // Avanzar infinito circular
         setIndex((prev) => (prev + 1) % deck.length);
     };
 
+    const handleCardTap = () => {
+        if (!showTranslation) {
+            setShowTranslation(true);
+        }
+    };
+
     return (
-        <div className="flex flex-col h-full items-center justify-between p-6 pb-safe bg-brand-bg text-brand-text overflow-y-auto">
+        <div className="flex flex-col h-full items-center justify-between p-4 pb-safe bg-transparent text-brand-text overflow-hidden">
 
-            {/* HEADER: Selector de Voz + Contador */}
-            <div className="w-full mb-4 space-y-2">
-                <div className="flex justify-between items-center text-[10px] text-brand-muted uppercase tracking-widest">
-                    <span>Survival A1</span>
-                    <span>{index + 1} / {deck.length}</span>
-                </div>
-
-                <div className="flex gap-2">
-                    <select
-                        className="w-full bg-slate-800 text-xs text-white p-2 rounded-lg border border-slate-700 outline-none"
-                        onChange={(e) => {
-                            const voice = voices.find(v => v.name === e.target.value);
-                            if (voice) setSelectedVoice(voice);
-                        }}
-                        value={selectedVoice?.name || ""}
-                    >
-                        {voices.length === 0 && <option>Cargando voces...</option>}
-                        {voices.map((v, i) => (
-                            <option key={`${v.name}-${v.lang}-${i}`} value={v.name}>
-                                {v.lang.includes('fr') ? '🇫🇷' : '🌍'} {v.name.slice(0, 25)}
-                            </option>
-                        ))}
-                    </select>
-                    <button
-                        onClick={loadVoices}
-                        className="text-lg bg-brand-surface border border-slate-700 rounded-lg px-3"
-                    >
-                        🔄
-                    </button>
-                </div>
-            </div>
-
-            {/* TARJETA VISUAL */}
-            <div className="flex-1 flex flex-col items-center justify-center gap-6 w-full max-w-sm min-h-[50vh]">
-                <div
-                    className="text-8xl drop-shadow-2xl cursor-pointer active:scale-90 transition-transform duration-200 select-none"
-                    onClick={() => speakFrench(card.french)}
-                >
-                    {card.emoji}
-                </div>
-
-                <div className="text-center space-y-4 w-full">
-                    <h2 className="text-3xl font-serif font-bold text-brand-text leading-tight min-h-[4rem] flex items-center justify-center select-none">
-                        {card.french}
-                    </h2>
-
-                    <button
-                        onClick={() => speakFrench(card.french)}
-                        disabled={isSpeaking}
-                        className={`px-8 py-3 rounded-full border border-brand-primary/50 text-brand-primary font-bold text-sm flex items-center gap-3 mx-auto hover:bg-brand-primary/20 active:bg-brand-primary/40 transition-all ${isSpeaking ? 'opacity-50 scale-95' : ''}`}
-                    >
-                        <span className="text-lg">🔊</span>
-                        <span>{isSpeaking ? 'Escuchando...' : 'Escuchar'}</span>
-                    </button>
-                </div>
-
-                <div className={`transition-all duration-300 transform w-full ${showTranslation ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 h-0 overflow-hidden'}`}>
-                    <p className="text-brand-muted text-lg font-medium bg-brand-surface px-6 py-4 rounded-xl border border-slate-700 text-center shadow-lg">
-                        {card.meaning}
-                    </p>
-                </div>
-            </div>
-
-            {/* BOTONES DE ACCIÓN */}
-            <div className="w-full space-y-3 pb-4 pt-4">
-                {!showTranslation ? (
-                    <button
-                        onClick={() => setShowTranslation(true)}
-                        className="w-full bg-brand-surface border border-slate-600 text-brand-text font-bold py-4 rounded-2xl active:scale-95 transition-transform shadow-lg"
-                    >
-                        ¿Qué significa? 🤔
-                    </button>
-                ) : (
-                    <div className="grid grid-cols-2 gap-4">
-                        <button
-                            onClick={nextCard}
-                            className="bg-brand-surface text-brand-error border-2 border-brand-error/20 font-bold py-4 rounded-2xl active:scale-95"
-                        >
-                            Difícil 🧠
-                        </button>
-                        <button
-                            onClick={nextCard}
-                            className="bg-brand-success text-brand-bg font-bold py-4 rounded-2xl shadow-lg active:scale-95"
-                        >
-                            Fácil 🚀
-                        </button>
+            {/* === HEADER: Progress + Voice Control === */}
+            <div className="w-full max-w-md">
+                <div className="glass-pill rounded-2xl px-4 py-3 flex items-center justify-between">
+                    {/* Progress Badge */}
+                    <div className="flex items-center gap-3">
+                        <div className="text-[10px] font-bold uppercase tracking-widest text-brand-muted">
+                            Survival A1
+                        </div>
+                        <div className="glass-card rounded-full px-3 py-1 text-xs font-bold text-cyan-400">
+                            {index + 1} / {deck.length}
+                        </div>
                     </div>
-                )}
+
+                    {/* Voice Selector Trigger */}
+                    <motion.button
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => setShowVoiceModal(true)}
+                        className="flex items-center gap-2 glass-card rounded-xl px-3 py-2 text-xs"
+                    >
+                        <span>🎙️</span>
+                        <span className="text-brand-muted max-w-[80px] truncate">
+                            {selectedVoice?.name.slice(0, 12) || 'Voz...'}
+                        </span>
+                    </motion.button>
+                </div>
             </div>
+
+            {/* === THE CARD === */}
+            <div className="flex-1 flex items-center justify-center w-full max-w-md py-6">
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={cardKey}
+                        initial={{ opacity: 0, scale: 0.9, rotateY: -15 }}
+                        animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+                        exit={{ opacity: 0, scale: 0.9, x: -100 }}
+                        transition={{ duration: 0.4, ease: "easeOut" }}
+                        onClick={handleCardTap}
+                        className="relative w-full aspect-[3/4] cursor-pointer"
+                    >
+                        {/* Card Container */}
+                        <div className="glass-card-elevated rounded-[2rem] w-full h-full flex flex-col items-center justify-center p-8 relative overflow-hidden">
+
+                            {/* Emoji Watermark */}
+                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                <span className="text-[12rem] opacity-[0.07] blur-[1px] select-none">
+                                    {card.emoji}
+                                </span>
+                            </div>
+
+                            {/* Content */}
+                            <div className="relative z-10 flex flex-col items-center justify-center h-full gap-6">
+
+                                {/* Type Badge */}
+                                <div className="glass-pill rounded-full px-4 py-1.5 text-[10px] font-bold uppercase tracking-widest text-cyan-400">
+                                    {card.type === 'phrase' ? 'Frase' : 'Vocabulario'}
+                                </div>
+
+                                {/* French Phrase - HUGE Serif */}
+                                <h2 className="font-display text-3xl md:text-4xl font-semibold text-center leading-tight text-white px-4">
+                                    {card.french}
+                                </h2>
+
+                                {/* Speaker Button */}
+                                <motion.button
+                                    whileTap={{ scale: 0.9 }}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        speakFrench(card.french);
+                                    }}
+                                    disabled={isSpeaking}
+                                    className={`glass-pill rounded-full px-6 py-3 flex items-center gap-3 transition-all duration-300 ${isSpeaking
+                                            ? 'glow-cyan-intense scale-105'
+                                            : 'hover:bg-white/10'
+                                        }`}
+                                >
+                                    <span className={`text-xl ${isSpeaking ? 'animate-pulse' : ''}`}>
+                                        🔊
+                                    </span>
+                                    <span className="text-sm font-medium text-white">
+                                        {isSpeaking ? 'Escuchando...' : 'Escuchar'}
+                                    </span>
+                                </motion.button>
+
+                                {/* Translation (Revealed on Tap) */}
+                                <AnimatePresence>
+                                    {showTranslation && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                                            exit={{ opacity: 0, y: 10 }}
+                                            transition={{ duration: 0.3 }}
+                                            className="glass-card rounded-2xl px-6 py-4 mt-2"
+                                        >
+                                            <p className="text-lg text-brand-muted text-center font-medium">
+                                                {card.meaning}
+                                            </p>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+
+                                {/* Tap Hint */}
+                                {!showTranslation && (
+                                    <motion.p
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        className="text-xs text-brand-muted/50 mt-2"
+                                    >
+                                        Toca para ver traducción
+                                    </motion.p>
+                                )}
+                            </div>
+                        </div>
+                    </motion.div>
+                </AnimatePresence>
+            </div>
+
+            {/* === FEEDBACK BUTTONS (Thumb Zone) === */}
+            <div className="w-full max-w-md pb-4">
+                <AnimatePresence mode="wait">
+                    {!showTranslation ? (
+                        <motion.div
+                            key="hint"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            className="text-center py-4"
+                        >
+                            <p className="text-sm text-brand-muted">
+                                Escucha y repite antes de revelar 🎯
+                            </p>
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            key="buttons"
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="grid grid-cols-2 gap-4"
+                        >
+                            {/* Difficult Button */}
+                            <motion.button
+                                whileTap={{ scale: 0.95 }}
+                                onClick={nextCard}
+                                className="relative overflow-hidden rounded-2xl py-5 font-bold text-lg transition-all duration-200"
+                                style={{
+                                    background: 'linear-gradient(135deg, rgba(248, 113, 113, 0.2) 0%, rgba(239, 68, 68, 0.1) 100%)',
+                                    border: '1px solid rgba(248, 113, 113, 0.3)',
+                                }}
+                            >
+                                <span className="relative z-10 flex items-center justify-center gap-2 text-red-400">
+                                    <span>Difícil</span>
+                                    <span className="text-xl">🧠</span>
+                                </span>
+                            </motion.button>
+
+                            {/* Easy Button */}
+                            <motion.button
+                                whileTap={{ scale: 0.95 }}
+                                onClick={nextCard}
+                                className="relative overflow-hidden rounded-2xl py-5 font-bold text-lg glow-success transition-all duration-200"
+                                style={{
+                                    background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
+                                }}
+                            >
+                                <span className="relative z-10 flex items-center justify-center gap-2 text-slate-900">
+                                    <span>Fácil</span>
+                                    <span className="text-xl">🚀</span>
+                                </span>
+                            </motion.button>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
+
+            {/* === VOICE SELECTOR MODAL === */}
+            <AnimatePresence>
+                {showVoiceModal && (
+                    <>
+                        {/* Backdrop */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setShowVoiceModal(false)}
+                            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+                        />
+
+                        {/* Modal */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 100 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 100 }}
+                            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                            className="fixed bottom-0 left-0 right-0 z-50 glass-card-elevated rounded-t-[2rem] max-h-[70vh] overflow-hidden"
+                        >
+                            <div className="p-6">
+                                {/* Handle */}
+                                <div className="w-10 h-1 bg-white/20 rounded-full mx-auto mb-6" />
+
+                                {/* Header */}
+                                <div className="flex items-center justify-between mb-6">
+                                    <h3 className="text-lg font-bold text-white">Seleccionar Voz</h3>
+                                    <motion.button
+                                        whileTap={{ scale: 0.9 }}
+                                        onClick={loadVoices}
+                                        className="glass-pill rounded-xl px-4 py-2 text-sm"
+                                    >
+                                        🔄 Recargar
+                                    </motion.button>
+                                </div>
+
+                                {/* Voice List */}
+                                <div className="overflow-y-auto max-h-[50vh] space-y-2 pb-safe">
+                                    {voices.length === 0 && (
+                                        <p className="text-center text-brand-muted py-8">
+                                            Cargando voces...
+                                        </p>
+                                    )}
+                                    {voices.map((v, i) => (
+                                        <motion.button
+                                            key={`${v.name}-${v.lang}-${i}`}
+                                            whileTap={{ scale: 0.98 }}
+                                            onClick={() => {
+                                                setSelectedVoice(v);
+                                                setShowVoiceModal(false);
+                                            }}
+                                            className={`w-full flex items-center gap-3 p-4 rounded-xl transition-all ${selectedVoice?.name === v.name
+                                                    ? 'glass-card-elevated border-cyan-400/50 glow-cyan'
+                                                    : 'glass-card hover:bg-white/10'
+                                                }`}
+                                        >
+                                            <span className="text-xl">
+                                                {v.lang.includes('fr') ? '🇫🇷' : '🌍'}
+                                            </span>
+                                            <div className="flex-1 text-left">
+                                                <p className="font-medium text-white truncate">
+                                                    {v.name}
+                                                </p>
+                                                <p className="text-xs text-brand-muted">
+                                                    {v.lang}
+                                                </p>
+                                            </div>
+                                            {selectedVoice?.name === v.name && (
+                                                <span className="text-cyan-400">✓</span>
+                                            )}
+                                        </motion.button>
+                                    ))}
+                                </div>
+                            </div>
+                        </motion.div>
+                    </>
+                )}
+            </AnimatePresence>
         </div>
     );
 }
