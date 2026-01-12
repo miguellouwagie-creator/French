@@ -4,7 +4,7 @@ const config: Config = {
     content: [
         "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
         "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-        "./src/Components/**/*.{js,ts,jsx,tsx,mdx}", // Cubrimos ambas mayúsculas/minúsculas
+        "./src/Components/**/*.{js,ts,jsx,tsx,mdx}", // Cubre ambas mayúsculas/minúsculas
         "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     ],
     theme: {

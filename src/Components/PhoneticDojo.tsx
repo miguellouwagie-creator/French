@@ -115,7 +115,6 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
         }
     };
 
-    // Light mode track colors
     const trackColors: Record<string, string> = {
         cyan: 'bg-cyan-100 text-cyan-700 border-cyan-200',
         violet: 'bg-violet-100 text-violet-700 border-violet-200',
@@ -185,7 +184,7 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
                 </div>
             </div>
 
-            {/* === THE CARD (Premium Playing Card Design) === */}
+            {/* === THE CARD === */}
             <div className="flex-1 flex items-center justify-center w-full max-w-md py-4">
                 <AnimatePresence mode="wait">
                     <motion.div
@@ -199,7 +198,7 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
                     >
                         <div className="bg-white border border-slate-200 shadow-[0_8px_30px_rgb(0,0,0,0.06)] rounded-[2rem] w-full h-full flex flex-col items-center justify-center p-8 relative overflow-hidden">
 
-                            {/* Subtle emoji watermark */}
+                            {/* Watermark */}
                             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                                 <span className="text-[8rem] opacity-[0.03] select-none grayscale">
                                     {card.emoji}
@@ -216,12 +215,12 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
                                                 card.type === 'phonetic' ? 'Fonética' : 'Conector'}
                                 </div>
 
-                                {/* French Phrase - HUGE - FIXED COLOR */}
+                                {/* French Phrase - ASEGURADO COLOR SLATE-900 (Negro) */}
                                 <h2 className="font-display text-4xl md:text-5xl font-semibold text-center leading-tight text-slate-900 px-2 drop-shadow-sm">
                                     {card.french}
                                 </h2>
 
-                                {/* Phonetic Guide for Phonetic Lab */}
+                                {/* Phonetic Guide */}
                                 {card.phoneticGuide && (
                                     <motion.div
                                         initial={{ opacity: 0, y: 10 }}
@@ -256,7 +255,6 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
 
                                 {/* Audio Buttons */}
                                 <div className="flex items-center gap-3">
-                                    {/* Main Speaker Button */}
                                     <motion.button
                                         whileTap={{ scale: 0.95 }}
                                         onClick={(e) => {
@@ -275,7 +273,6 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
                                         </span>
                                     </motion.button>
 
-                                    {/* Slow Motion Turtle Button */}
                                     <motion.button
                                         whileTap={{ scale: 0.95 }}
                                         onClick={(e) => {
@@ -293,7 +290,6 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
                                     </motion.button>
                                 </div>
 
-                                {/* Speed Hint */}
                                 {isSlowMode && (
                                     <motion.p
                                         initial={{ opacity: 0, y: -5 }}
@@ -304,7 +300,6 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
                                     </motion.p>
                                 )}
 
-                                {/* Translation */}
                                 <AnimatePresence>
                                     {showTranslation && (
                                         <motion.div
@@ -321,7 +316,6 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
                                     )}
                                 </AnimatePresence>
 
-                                {/* Tap Hint */}
                                 {!showTranslation && !card.phoneticGuide && (
                                     <motion.p
                                         initial={{ opacity: 0 }}
