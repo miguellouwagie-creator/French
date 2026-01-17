@@ -9,7 +9,9 @@ const shuffleArray = <T,>(array: T[]): T[] => {
     const newArr = [...array];
     for (let i = newArr.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+        const temp = newArr[i];
+        newArr[i] = newArr[j]!; // ✅ Non-null assertion
+        newArr[j] = temp!; // ✅ Non-null assertion
     }
     return newArr;
 };
