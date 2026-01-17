@@ -427,7 +427,11 @@ export function getTrackById(trackId: string): Track | undefined {
 
 // Helper function to get default track
 export function getDefaultTrack(): Track {
-    return TRACKS[0]; // Survival is default
+    const defaultTrack = TRACKS[0];
+    if (!defaultTrack) {
+        throw new Error("Fatal Error: TRACKS array is empty. Data corruption.");
+    }
+    return defaultTrack;
 }
 
 // Helper function to get ALL cards from ALL tracks (for Quiz Mode)
