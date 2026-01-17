@@ -1,45 +1,7 @@
-@import "tailwindcss";
-
-:root {
-  /* L'Atelier - Warm Light Theme */
-  --background: #fff7ed;
-  /* orange-50 - Warm Paper */
-  --foreground: #1e293b;
-  /* slate-800 - Ink */
-  --accent: #ea580c;
-  /* orange-600 - Energetic */
-}
-
-/* --- FIX PARA IPHONE: FORZAR MODO CLARO --- */
-/* Esto bloquea que el móvil cambie los colores si tienes el modo oscuro activado */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #fff7ed !important;
-    --foreground: #1e293b !important;
-  }
-}
-
-body {
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), system-ui, sans-serif;
-
-  /* Subtle warm gradient */
-  background-image:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(251, 146, 60, 0.08), transparent),
-    radial-gradient(ellipse 60% 40% at 100% 100%, rgba(234, 88, 12, 0.05), transparent);
-  background-attachment: fixed;
-  min-height: 100vh;
-
-  /* Native App Feel */
-  overscroll-behavior-y: none;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+@import "./theme.css";
 
 /* ========================================
-   CARD SYSTEM - White Premium Cards
+   CARD SYSTEM
    ======================================== */
 
 .card-elevated {
@@ -108,19 +70,34 @@ body {
 }
 
 /* ========================================
-   TYPOGRAPHY
+   TYPOGRAPHY OVERRIDES
    ======================================== */
 
 .text-display {
-  font-family: var(--font-display), serif;
+  font-family: var(--font-display);
   font-weight: 600;
   letter-spacing: -0.02em;
-  color: #0f172a;
-  /* slate-900 */
+  color: #0f172a !important;
 }
 
 .text-ui {
-  font-family: var(--font-sans), system-ui, sans-serif;
+  font-family: var(--font-sans);
+}
+
+/* Ensure all headings are always dark */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #0f172a !important;
+}
+
+/* Force text color on all important elements */
+.force-dark-text,
+.force-dark-text * {
+  color: #0f172a !important;
 }
 
 /* ========================================

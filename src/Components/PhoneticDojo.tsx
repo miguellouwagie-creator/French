@@ -205,7 +205,7 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
                                 </span>
                             </div>
 
-                            <div className="relative z-10 flex flex-col items-center justify-center h-full gap-4 w-full">
+                            <div className="relative z-10 flex flex-col items-center justify-center h-full gap-4 w-full force-dark-text">
 
                                 {/* Type Badge */}
                                 <div className={`px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest ${isPhoneticLab ? 'bg-fuchsia-100 text-fuchsia-700' : 'bg-orange-100 text-orange-700'}`}>
@@ -216,7 +216,10 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
                                 </div>
 
                                 {/* French Phrase - ASEGURADO COLOR SLATE-900 (Negro) */}
-                                <h2 className="font-display text-4xl md:text-5xl font-semibold text-center leading-tight text-slate-900 px-2 drop-shadow-sm">
+                                <h2
+                                    className="font-display text-4xl md:text-5xl font-semibold text-center leading-tight px-2 drop-shadow-sm force-dark-text"
+                                    style={{ color: '#0f172a' }}
+                                >
                                     {card.french}
                                 </h2>
 
