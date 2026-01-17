@@ -139,7 +139,7 @@ export default function Home() {
         >
           {TRACKS.map((track) => {
             const IconComponent = iconMap[track.icon] || Shield;
-            const colors = colorMap[track.color] || colorMap.cyan;
+            const colors = (colorMap[track.color] || colorMap.cyan) as { iconBg: string; iconText: string; hoverBg: string };
 
             return (
               <motion.div
