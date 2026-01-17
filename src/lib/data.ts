@@ -46,6 +46,15 @@ const SURVIVAL_DECK: Card[] = [
     { id: 'surv-10', emoji: '🚇', french: 'Je cherche le métro', meaning: 'Busco el metro', type: 'phrase' },
     { id: 'surv-11', emoji: '🚑', french: 'Aidez-moi !', meaning: '¡Ayúdenme!', type: 'phrase' },
     { id: 'surv-12', emoji: '💊', french: 'J\'ai besoin d\'un médecin', meaning: 'Necesito un médico', type: 'phrase' },
+    // Urban Survival Expansion
+    { id: 'surv-13', emoji: '🛍️', french: 'À emporter, s\'il vous plaît', meaning: 'Para llevar, por favor', type: 'phrase' },
+    { id: 'surv-14', emoji: '💳', french: 'Vous prenez la carte ?', meaning: '¿Aceptan tarjeta?', type: 'phrase' },
+    { id: 'surv-15', emoji: '😅', french: 'C\'est pas grave', meaning: 'No pasa nada / No importa', type: 'phrase' },
+    { id: 'surv-16', emoji: '🕑', french: 'J\'arrive dans 5 minutes', meaning: 'Llego en 5 minutos', type: 'phrase' },
+    { id: 'surv-17', emoji: '🛑', french: 'Arrêtez ici, s\'il vous plaît', meaning: 'Pare aquí, por favor (Taxi)', type: 'phrase' },
+    { id: 'surv-18', emoji: '📶', french: 'C\'est quoi le mot de passe Wifi ?', meaning: '¿Cuál es la contraseña del Wifi?', type: 'phrase' },
+    { id: 'surv-19', emoji: '👍', french: 'Ça marche', meaning: 'Vale / Me parece bien / Funciona', type: 'phrase' },
+    { id: 'surv-20', emoji: '🌡️', french: 'Il fait trop chaud ici', meaning: 'Hace demasiado calor aquí', type: 'phrase' },
 ];
 
 // =====================================================
@@ -64,6 +73,15 @@ const OBJECTS_DECK: Card[] = [
     { id: 'obj-10', emoji: '🪑', french: 'La chaise', meaning: 'La silla', type: 'vocab' },
     { id: 'obj-11', emoji: '🛏️', french: 'Le lit', meaning: 'La cama', type: 'vocab' },
     { id: 'obj-12', emoji: '🍷', french: 'Le vin', meaning: 'El vino', type: 'vocab' },
+    // Daily Essentials Expansion
+    { id: 'obj-13', emoji: '🗝️', french: 'Les clés', meaning: 'Las llaves', type: 'vocab' },
+    { id: 'obj-14', emoji: '🔋', french: 'Le chargeur', meaning: 'El cargador', type: 'vocab' },
+    { id: 'obj-15', emoji: '🧥', french: 'Le manteau', meaning: 'El abrigo', type: 'vocab' },
+    { id: 'obj-16', emoji: '👟', french: 'Les chaussures', meaning: 'Los zapatos', type: 'vocab' },
+    { id: 'obj-17', emoji: '🧴', french: 'La crème solaire', meaning: 'La crema solar', type: 'vocab' },
+    { id: 'obj-18', emoji: '🕶️', french: 'Les lunettes', meaning: 'Las gafas', type: 'vocab' },
+    { id: 'obj-19', emoji: '🎫', french: 'Le billet', meaning: 'El billete/entrada', type: 'vocab' },
+    { id: 'obj-20', emoji: '🧊', french: 'Le frigo', meaning: 'La nevera', type: 'vocab' },
 ];
 
 // =====================================================
@@ -82,6 +100,15 @@ const VERBS_DECK: Card[] = [
     { id: 'verb-10', emoji: '🎧', french: 'J\'écoute de la musique', meaning: 'Escucho música', type: 'verb' },
     { id: 'verb-11', emoji: '🏠', french: 'Je reste à la maison', meaning: 'Me quedo en casa', type: 'verb' },
     { id: 'verb-12', emoji: '🛒', french: 'Je fais les courses', meaning: 'Hago las compras', type: 'verb' },
+    // Routines & Action Expansion
+    { id: 'verb-13', emoji: '🚿', french: 'Je prends une douche', meaning: 'Me ducho', type: 'verb' },
+    { id: 'verb-14', emoji: '🍳', french: 'Je prépare le dîner', meaning: 'Preparo la cena', type: 'verb' },
+    { id: 'verb-15', emoji: '🧹', french: 'Je dois nettoyer', meaning: 'Tengo que limpiar', type: 'verb' },
+    { id: 'verb-16', emoji: '🔍', french: 'Je cherche mes clés', meaning: 'Busco mis llaves', type: 'verb' },
+    { id: 'verb-17', emoji: '🛒', french: 'Je dois acheter ça', meaning: 'Tengo que comprar esto', type: 'verb' },
+    { id: 'verb-18', emoji: '🤝', french: 'On se retrouve là-bas', meaning: 'Nos encontramos allí', type: 'verb' },
+    { id: 'verb-19', emoji: '📲', french: 'Je t\'appelle plus tard', meaning: 'Te llamo más tarde', type: 'verb' },
+    { id: 'verb-20', emoji: '🚶', french: 'Je pars maintenant', meaning: 'Me voy ahora', type: 'verb' },
 ];
 
 // =====================================================
@@ -100,6 +127,13 @@ const CORPORATE_DECK: Card[] = [
     { id: 'corp-10', emoji: '🗓️', french: 'On se voit demain', meaning: 'Nos vemos mañana', type: 'phrase' },
     { id: 'corp-11', emoji: '✅', french: 'C\'est noté', meaning: 'Anotado / Entendido', type: 'phrase' },
     { id: 'corp-12', emoji: '🙋', french: 'J\'ai une question', meaning: 'Tengo una pregunta', type: 'phrase' },
+    // Remote Work Era Expansion
+    { id: 'corp-13', emoji: '🏠', french: 'Je suis en télétravail', meaning: 'Estoy teletrabajando', type: 'phrase' },
+    { id: 'corp-14', emoji: '🔗', french: 'Tu as le lien ?', meaning: '¿Tienes el enlace?', type: 'phrase' },
+    { id: 'corp-15', emoji: '📅', french: 'On peut décaler ?', meaning: '¿Podemos mover la reunión?', type: 'phrase' },
+    { id: 'corp-16', emoji: '🔇', french: 'Ton micro est coupé', meaning: 'Tu micro está apagado', type: 'phrase' },
+    { id: 'corp-17', emoji: '🚀', french: 'C\'est validé', meaning: 'Está aprobado', type: 'phrase' },
+    { id: 'corp-18', emoji: '🔄', french: 'Je te tiens au courant', meaning: 'Te mantengo informado', type: 'phrase' },
 ];
 
 // =====================================================
@@ -118,6 +152,15 @@ const GLUE_DECK: Card[] = [
     { id: 'glue-10', emoji: '🔚', french: 'Enfin', meaning: 'Finalmente', type: 'connector' },
     { id: 'glue-11', emoji: '🤷', french: 'Peut-être', meaning: 'Quizás / Tal vez', type: 'connector' },
     { id: 'glue-12', emoji: '💯', french: 'Bien sûr', meaning: 'Por supuesto', type: 'connector' },
+    // Native Connectors Expansion (To Sound Like a Native)
+    { id: 'glue-13', emoji: '💥', french: 'Du coup', meaning: 'Entonces / Total que... (Muy usado)', type: 'connector' },
+    { id: 'glue-14', emoji: '🤐', french: 'Bref', meaning: 'En fin / Resumiendo', type: 'connector' },
+    { id: 'glue-15', emoji: '🤷', french: 'Quand même', meaning: 'De todas formas / Aún así', type: 'connector' },
+    { id: 'glue-16', emoji: '⚖️', french: 'Par contre', meaning: 'En cambio / Por otro lado', type: 'connector' },
+    { id: 'glue-17', emoji: '🤔', french: 'Genre', meaning: 'Tipo / O sea (Coloquial)', type: 'connector' },
+    { id: 'glue-18', emoji: '👉', french: 'D\'ailleurs', meaning: 'Por cierto / A propósito', type: 'connector' },
+    { id: 'glue-19', emoji: '🛑', french: 'Franchement', meaning: 'Francamente / Sinceramente', type: 'connector' },
+    { id: 'glue-20', emoji: '👀', french: 'Carrément', meaning: 'Totalmente / Completamente (Coloquial)', type: 'connector' },
 ];
 
 // =====================================================
@@ -224,6 +267,47 @@ const PHONETIC_DECK: Card[] = [
         trap: 'Tres letras, un solo sonido: O',
         mnemonic: 'E-A-U = solo "O"... el francés es eficiente'
     },
+    // Complex Sounds Expansion
+    {
+        id: 'phon-11',
+        emoji: '🐿️',
+        french: 'Écureuil',
+        meaning: 'Ardilla',
+        type: 'phonetic',
+        phoneticGuide: 'É-cu-RÖY',
+        trap: 'Terminación -EUIL imposible',
+        mnemonic: 'Mezcla R y Y'
+    },
+    {
+        id: 'phon-12',
+        emoji: '🐸',
+        french: 'Grenouille',
+        meaning: 'Rana',
+        type: 'phonetic',
+        phoneticGuide: 'Gre-NUY',
+        trap: 'OUILLE suena como "Uy"',
+        mnemonic: 'Gre-NUY'
+    },
+    {
+        id: 'phon-13',
+        emoji: '🥣',
+        french: 'Bouilloire',
+        meaning: 'Hervidor',
+        type: 'phonetic',
+        phoneticGuide: 'Bu-YWAR',
+        trap: 'Doble L mojada + OIRE',
+        mnemonic: 'Bu-Y-War'
+    },
+    {
+        id: 'phon-14',
+        emoji: '🥛',
+        french: 'Yaourt',
+        meaning: 'Yogur',
+        type: 'phonetic',
+        phoneticGuide: 'Ya-URT',
+        trap: 'Aquí sí suena la T final',
+        mnemonic: 'Ya-hurt'
+    },
 ];
 
 // =====================================================
@@ -261,6 +345,19 @@ const VOCABULARY_ATLAS_DECK: Card[] = [
     { id: 'atlas-26', emoji: '🩷', french: 'Rose', meaning: 'Rosa', type: 'table', category: 'Colores' },
     { id: 'atlas-27', emoji: '🟤', french: 'Marron', meaning: 'Marrón', type: 'table', category: 'Colores' },
     { id: 'atlas-28', emoji: '🩶', french: 'Gris', meaning: 'Gris', type: 'table', category: 'Colores' },
+    // Months (Les Mois)
+    { id: 'atlas-29', emoji: '📅', french: 'Janvier', meaning: 'Enero', type: 'table', category: 'Les Mois' },
+    { id: 'atlas-30', emoji: '📅', french: 'Février', meaning: 'Febrero', type: 'table', category: 'Les Mois' },
+    { id: 'atlas-31', emoji: '📅', french: 'Mars', meaning: 'Marzo', type: 'table', category: 'Les Mois' },
+    { id: 'atlas-32', emoji: '📅', french: 'Avril', meaning: 'Abril', type: 'table', category: 'Les Mois' },
+    { id: 'atlas-33', emoji: '📅', french: 'Mai', meaning: 'Mayo', type: 'table', category: 'Les Mois' },
+    { id: 'atlas-34', emoji: '📅', french: 'Juin', meaning: 'Junio', type: 'table', category: 'Les Mois' },
+    { id: 'atlas-35', emoji: '📅', french: 'Juillet', meaning: 'Julio', type: 'table', category: 'Les Mois' },
+    { id: 'atlas-36', emoji: '📅', french: 'Août', meaning: 'Agosto', type: 'table', category: 'Les Mois' },
+    { id: 'atlas-37', emoji: '📅', french: 'Septembre', meaning: 'Septiembre', type: 'table', category: 'Les Mois' },
+    { id: 'atlas-38', emoji: '📅', french: 'Octobre', meaning: 'Octubre', type: 'table', category: 'Les Mois' },
+    { id: 'atlas-39', emoji: '📅', french: 'Novembre', meaning: 'Noviembre', type: 'table', category: 'Les Mois' },
+    { id: 'atlas-40', emoji: '📅', french: 'Décembre', meaning: 'Diciembre', type: 'table', category: 'Les Mois' },
 ];
 
 // =====================================================
@@ -330,6 +427,22 @@ const PHRASE_ANATOMY_DECK: Card[] = [
             { text: 'Qu\'est-ce que', meaning: '¿Qué...?', grammarNote: 'Partícula interrogativa para objetos' },
             { text: 'vous prenez', meaning: 'ustedes toman', grammarNote: 'Pronombre formal + verbo prendre' },
             { text: 'comme dessert', meaning: 'de postre', grammarNote: 'comme = como/de (en contexto de menú)' },
+        ],
+    },
+    // Complex Real-World Scenario
+    {
+        id: 'anat-6',
+        emoji: '📋',
+        french: 'Désolé, je ne peux pas venir ce soir parce que je dois finir un dossier urgent.',
+        meaning: 'Lo siento, no puedo venir esta noche porque tengo que terminar un informe urgente.',
+        type: 'anatomy',
+        segments: [
+            { text: 'Désolé', meaning: 'Lo siento', grammarNote: 'Disculpa / Expresión de lamento' },
+            { text: 'je ne peux pas venir', meaning: 'no puedo venir', grammarNote: 'Negación de pouvoir (verbo modal) + infinitivo' },
+            { text: 'ce soir', meaning: 'esta noche', grammarNote: 'Expresión temporal' },
+            { text: 'parce que', meaning: 'porque', grammarNote: 'Conjunción causal' },
+            { text: 'je dois finir', meaning: 'tengo que terminar', grammarNote: 'Devoir (obligación) + infinitivo' },
+            { text: 'un dossier urgent', meaning: 'un informe urgente', grammarNote: 'Artículo + sustantivo + adjetivo' },
         ],
     },
 ];
