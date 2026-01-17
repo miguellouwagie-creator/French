@@ -1,6 +1,49 @@
 @import "./theme.css";
 
 /* ========================================
+   NUCLEAR LIGHT-MODE LOCK (iOS/WebKit)
+   ======================================== */
+
+/* 1) Force UA + form controls to behave as LIGHT */
+:root,
+html,
+body {
+  color-scheme: light !important;
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+}
+
+/* 2) iOS WebKit sometimes paints text via text-fill; enforce it */
+body,
+body * {
+  -webkit-text-fill-color: currentColor;
+}
+
+/* 3) If the OS requests dark, we still pin everything to light */
+@media (prefers-color-scheme: dark) {
+
+  :root,
+  html,
+  body {
+    color-scheme: light !important;
+    background-color: var(--background) !important;
+    color: var(--foreground) !important;
+  }
+
+  body,
+  body * {
+    -webkit-text-fill-color: currentColor !important;
+  }
+
+  /* Optional: prevent any accidental "dark" class from having impact */
+  html.dark,
+  :root.dark,
+  body.dark {
+    color-scheme: light !important;
+  }
+}
+
+/* ========================================
    CARD SYSTEM
    ======================================== */
 

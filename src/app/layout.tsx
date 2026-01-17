@@ -23,8 +23,14 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
   viewportFit: "cover",
-  themeColor: "#fff7ed", // ✅ FIXED: Light cream color
-  colorScheme: "light", // ✅ NEW: Force light mode
+
+  // Keep these ALWAYS light, even if Safari queries dark scheme theme-color.
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#fff7ed" },
+    { media: "(prefers-color-scheme: dark)", color: "#fff7ed" },
+  ],
+
+  colorScheme: "light",
 };
 
 export const metadata: Metadata = {
@@ -32,12 +38,13 @@ export const metadata: Metadata = {
   description: "Tu sistema de adquisición del francés diseñado para el cerebro, no para los exámenes.",
   appleWebApp: {
     capable: true,
-    statusBarStyle: "default", // ✅ FIXED: Changed from "black-translucent"
+    statusBarStyle: "default",
     title: "L'Architecte",
   },
   manifest: "/manifest.json",
   other: {
-    "color-scheme": "light", // ✅ NEW: Additional color scheme hint
+    "color-scheme": "light",
+    "supported-color-schemes": "light",
   },
 };
 
@@ -54,31 +61,30 @@ export default function RootLayout({
       style={{ colorScheme: 'light' }} // ✅ NEW: Inline style override
     >
       <head>
-        {/* ✅ NEW: Meta tag to force light color scheme */}
         <meta name="color-scheme" content="light" />
+        <meta name="supported-color-schemes" content="light" />
 
-        {/* ✅ NEW: Anti-dark-mode script - runs BEFORE body renders */}
         <Script id="force-light-mode" strategy="beforeInteractive">
           {`
             (function() {
-              // Nuclear option: Force light mode immediately
               const root = document.documentElement;
+
+              // Force light immediately
               root.classList.remove('dark');
               root.classList.add('light');
               root.style.setProperty('color-scheme', 'light', 'important');
-              
-              // Prevent dark mode class from being added
+
+              // Actively prevent .dark from being added later
               const observer = new MutationObserver(function(mutations) {
-                mutations.forEach(function(mutation) {
-                  if (mutation.attributeName === 'class') {
-                    if (root.classList.contains('dark')) {
-                      root.classList.remove('dark');
-                      root.classList.add('light');
-                    }
+                for (const m of mutations) {
+                  if (m.attributeName === 'class' && root.classList.contains('dark')) {
+                    root.classList.remove('dark');
+                    root.classList.add('light');
+                    root.style.setProperty('color-scheme', 'light', 'important');
                   }
-                });
+                }
               });
-              
+
               observer.observe(root, { attributes: true });
             })();
           `}
