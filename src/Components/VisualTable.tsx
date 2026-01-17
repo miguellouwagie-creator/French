@@ -167,7 +167,7 @@ export default function VisualTable({ track }: VisualTableProps) {
 
                             {/* Cards in Category */}
                             <div className="space-y-2">
-                                {groupedCards[category].map((card, index) => (
+                                {(groupedCards[category] || []).map((card, index) => (
                                     <motion.button
                                         key={card.id}
                                         variants={{
