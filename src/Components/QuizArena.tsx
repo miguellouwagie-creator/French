@@ -89,7 +89,7 @@ export default function QuizArena() {
 
         // Combine and shuffle options
         const options = shuffleArray([target, ...distractors]);
-        const correctIndex = options.findIndex(c => c.id === target.id);
+        const correctIndex = options.findIndex(c => c?.id === target.id);
 
         setQuestion({ target, options, correctIndex });
         setSelectedIndex(null);
