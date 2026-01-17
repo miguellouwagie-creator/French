@@ -23,7 +23,7 @@ const cardSchema: RxJsonSchema<any> = {
         factor: { type: 'number' },
         dueDate: { type: 'number' },
         state: { type: 'string', enum: ['new', 'learning', 'review', 'relearning'] },
-        // Campos nuevos opcionales para el Laboratorio
+        // Campos opcionales
         phoneticGuide: { type: 'string' },
         mnemonic: { type: 'string' },
         trap: { type: 'string' }
@@ -51,34 +51,48 @@ export type MyDatabaseCollections = {
 
 export type MyDatabase = RxDatabase<MyDatabaseCollections>;
 
-let dbPromise: Promise<MyDatabase> | null = null;
+// --- FIX: Variable Global para evitar duplicados en Hot Reload ---
+const globalForRxDB = globalThis as unknown as {
+    rxdbPromise: Promise<MyDatabase> | undefined;
+};
 
 const cryptoJsHash = async (data: string) => {
     return SHA256(data).toString();
 };
 
 export const getDatabase = async (): Promise<MyDatabase> => {
-    if (dbPromise) return dbPromise;
+    // 1. Si ya existe una instancia en memoria (por recarga), devuélvela directa
+    if (process.env.NODE_ENV === 'development' && globalForRxDB.rxdbPromise) {
+        return globalForRxDB.rxdbPromise;
+    }
 
     const storage = process.env.NODE_ENV === 'development'
         ? wrappedValidateAjvStorage({ storage: getRxStorageDexie() })
         : getRxStorageDexie();
 
-    dbPromise = createRxDatabase<MyDatabaseCollections>({
-        name: 'larchitectedb_v2', // <--- CAMBIO CLAVE: Nombre nuevo para resetear datos corruptos
+    const dbPromise = createRxDatabase<MyDatabaseCollections>({
+        name: 'larchitectedb_v2',
         storage: storage,
         hashFunction: cryptoJsHash,
-        multiInstance: false,     // <--- CAMBIO CLAVE: Evita errores de bloqueo en iPhone
+        multiInstance: false,
         ignoreDuplicate: true
     }).then(async (db) => {
-        await db.addCollections({
-            cards: {
-                schema: cardSchema
-            }
-        });
+        // 2. Verificamos si la colección ya existe antes de añadirla (Doble seguridad)
+        if (!db.collections.cards) {
+            await db.addCollections({
+                cards: {
+                    schema: cardSchema
+                }
+            });
+        }
         console.log("🧠 Cerebro L'Architecte activado (v2)");
         return db;
     });
+
+    // 3. Guardamos la promesa en el objeto global
+    if (process.env.NODE_ENV === 'development') {
+        globalForRxDB.rxdbPromise = dbPromise;
+    }
 
     return dbPromise;
 };
