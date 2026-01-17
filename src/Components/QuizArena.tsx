@@ -84,8 +84,8 @@ export default function QuizArena() {
         if (allCards.length < 3) return;
 
         const shuffled = shuffleArray(allCards);
-        const target = shuffled[0];
-        const distractors = shuffled.slice(1, 3);
+        const target = shuffled[0]!;
+        const distractors = shuffled.slice(1, 3) as Card[];
 
         // Combine and shuffle options
         const options = shuffleArray([target, ...distractors]);
