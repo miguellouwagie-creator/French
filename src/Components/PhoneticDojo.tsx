@@ -62,8 +62,13 @@ export default function PhoneticDojo({ trackId = 'survival' }: PhoneticDojoProps
                 v.lang.includes('fr-FR')
             );
 
-            if (bestVoice && !selectedVoice) setSelectedVoice(bestVoice);
-            else if (!selectedVoice && sorted.length > 0) setSelectedVoice(sorted[0]);
+            // ✅ FIXED: Add null checks
+            if (bestVoice && !selectedVoice) {
+                setSelectedVoice(bestVoice);
+            } else if (!selectedVoice && sorted.length > 0) {
+                const firstVoice = sorted[0];
+                if (firstVoice) setSelectedVoice(firstVoice);
+            }
         }
     }, [selectedVoice]);
 
