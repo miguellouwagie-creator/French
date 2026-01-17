@@ -50,8 +50,7 @@ export type MyDatabaseCollections = {
 
 export type MyDatabase = RxDatabase<MyDatabaseCollections>;
 
-// --- AQUÍ ESTÁ EL CAMBIO CLAVE ---
-// Usamos globalThis para que la conexión sobreviva al Hot Reload de Next.js
+// Variable global para mantener la conexión activa en HMR (Hot Module Replacement)
 const globalForRxDB = globalThis as unknown as {
     rxdbPromise: Promise<MyDatabase> | undefined;
 };
@@ -61,8 +60,8 @@ const cryptoJsHash = async (data: string) => {
 };
 
 export const getDatabase = async (): Promise<MyDatabase> => {
-    // 1. PRIMERO: Verificamos si ya existe una conexión global
-    if (process.env.NODE_ENV === 'development' && globalForRxDB.rxdbPromise) {
+    // 1. Si ya existe una promesa activa (en dev o prod), la reutilizamos
+    if (globalForRxDB.rxdbPromise) {
         return globalForRxDB.rxdbPromise;
     }
 
@@ -71,13 +70,13 @@ export const getDatabase = async (): Promise<MyDatabase> => {
         : getRxStorageDexie();
 
     const dbPromise = createRxDatabase<MyDatabaseCollections>({
-        name: 'larchitectedb_v3', // Subimos versión para limpiar cualquier bloqueo previo
+        name: 'larchitectedb_v4', // Versión v4 limpia
         storage: storage,
         hashFunction: cryptoJsHash,
         multiInstance: false,
-        ignoreDuplicate: true
+        // CORRECCIÓN CRÍTICA DB9: Solo activar en desarrollo
+        ignoreDuplicate: process.env.NODE_ENV === 'development'
     }).then(async (db) => {
-        // Añadimos colección solo si no existe
         if (!db.collections.cards) {
             await db.addCollections({
                 cards: {
@@ -85,14 +84,12 @@ export const getDatabase = async (): Promise<MyDatabase> => {
                 }
             });
         }
-        console.log("🧠 Cerebro L'Architecte activado (Singleton)");
+        console.log("🧠 Cerebro L'Architecte activado (v4)");
         return db;
     });
 
-    // 2. GUARDAMOS la conexión en la variable global
-    if (process.env.NODE_ENV === 'development') {
-        globalForRxDB.rxdbPromise = dbPromise;
-    }
+    // Guardamos la promesa globalmente para que sea un Singleton
+    globalForRxDB.rxdbPromise = dbPromise;
 
     return dbPromise;
 };
