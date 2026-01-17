@@ -23,7 +23,6 @@ const cardSchema: RxJsonSchema<any> = {
         factor: { type: 'number' },
         dueDate: { type: 'number' },
         state: { type: 'string', enum: ['new', 'learning', 'review', 'relearning'] },
-        // Campos opcionales
         phoneticGuide: { type: 'string' },
         mnemonic: { type: 'string' },
         trap: { type: 'string' }
@@ -51,7 +50,8 @@ export type MyDatabaseCollections = {
 
 export type MyDatabase = RxDatabase<MyDatabaseCollections>;
 
-// --- FIX: Variable Global para evitar duplicados en Hot Reload ---
+// --- AQUÍ ESTÁ EL CAMBIO CLAVE ---
+// Usamos globalThis para que la conexión sobreviva al Hot Reload de Next.js
 const globalForRxDB = globalThis as unknown as {
     rxdbPromise: Promise<MyDatabase> | undefined;
 };
@@ -61,7 +61,7 @@ const cryptoJsHash = async (data: string) => {
 };
 
 export const getDatabase = async (): Promise<MyDatabase> => {
-    // 1. Si ya existe una instancia en memoria (por recarga), devuélvela directa
+    // 1. PRIMERO: Verificamos si ya existe una conexión global
     if (process.env.NODE_ENV === 'development' && globalForRxDB.rxdbPromise) {
         return globalForRxDB.rxdbPromise;
     }
@@ -71,13 +71,13 @@ export const getDatabase = async (): Promise<MyDatabase> => {
         : getRxStorageDexie();
 
     const dbPromise = createRxDatabase<MyDatabaseCollections>({
-        name: 'larchitectedb_v2',
+        name: 'larchitectedb_v3', // Subimos versión para limpiar cualquier bloqueo previo
         storage: storage,
         hashFunction: cryptoJsHash,
         multiInstance: false,
         ignoreDuplicate: true
     }).then(async (db) => {
-        // 2. Verificamos si la colección ya existe antes de añadirla (Doble seguridad)
+        // Añadimos colección solo si no existe
         if (!db.collections.cards) {
             await db.addCollections({
                 cards: {
@@ -85,11 +85,11 @@ export const getDatabase = async (): Promise<MyDatabase> => {
                 }
             });
         }
-        console.log("🧠 Cerebro L'Architecte activado (v2)");
+        console.log("🧠 Cerebro L'Architecte activado (Singleton)");
         return db;
     });
 
-    // 3. Guardamos la promesa en el objeto global
+    // 2. GUARDAMOS la conexión en la variable global
     if (process.env.NODE_ENV === 'development') {
         globalForRxDB.rxdbPromise = dbPromise;
     }
