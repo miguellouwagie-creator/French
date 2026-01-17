@@ -46,7 +46,7 @@ export default function SentenceAnatomy({ track }: SentenceAnatomyProps) {
             );
 
             if (bestVoice && !selectedVoice) setSelectedVoice(bestVoice);
-            else if (!selectedVoice && sorted.length > 0) setSelectedVoice(sorted[0]);
+            else if (!selectedVoice && sorted[0]) setSelectedVoice(sorted[0]);
         }
     }, [selectedVoice]);
 
