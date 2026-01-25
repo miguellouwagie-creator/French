@@ -448,6 +448,83 @@ const PHRASE_ANATOMY_DECK: Card[] = [
 ];
 
 // =====================================================
+// TRACK 9: DAILY ESSENTIALS (Quick Reference Table)
+// =====================================================
+const ESSENTIALS_DECK: Card[] = [
+    // 1. INTERACCIONES RÁPIDAS (Quick Actions)
+    { id: 'ess-1', emoji: '👇', french: 'On descend ?', meaning: '¿Bajamos?', type: 'table', category: 'Acción Inmediata' },
+    { id: 'ess-2', emoji: '🚪', french: 'On sort ?', meaning: '¿Salimos?', type: 'table', category: 'Acción Inmediata' },
+    { id: 'ess-3', emoji: '🚶', french: 'On y va ?', meaning: '¿Nos vamos?', type: 'table', category: 'Acción Inmediata' },
+    { id: 'ess-4', emoji: '💨', french: 'On bouge ?', meaning: '¿Nos movemos/piramos?', type: 'table', category: 'Acción Inmediata' },
+    { id: 'ess-5', emoji: '🏠', french: 'Je rentre', meaning: 'Me voy a casa / Vuelvo', type: 'table', category: 'Acción Inmediata' },
+    { id: 'ess-6', emoji: '🍽️', french: 'À table !', meaning: '¡A comer!', type: 'table', category: 'Acción Inmediata' },
+    { id: 'ess-7', emoji: '👀', french: 'Regarde ça', meaning: 'Mira esto', type: 'table', category: 'Acción Inmediata' },
+    { id: 'ess-8', emoji: '👂', french: 'Écoute-moi', meaning: 'Escúchame', type: 'table', category: 'Acción Inmediata' },
+    { id: 'ess-9', emoji: '✋', french: 'Attends', meaning: 'Espera', type: 'table', category: 'Acción Inmediata' },
+    { id: 'ess-10', emoji: '🏎️', french: 'Dépêche-toi', meaning: 'Date prisa', type: 'table', category: 'Acción Inmediata' },
+
+    // 2. CORTESÍA DIARIA (Politeness)
+    { id: 'ess-11', emoji: '🙏', french: 'Merci bien', meaning: 'Muchas gracias', type: 'table', category: 'Cortesía' },
+    { id: 'ess-12', emoji: '👐', french: 'De rien', meaning: 'De nada', type: 'table', category: 'Cortesía' },
+    { id: 'ess-13', emoji: '🤷', french: 'Pas de souci', meaning: 'No hay problema / Sin fallo', type: 'table', category: 'Cortesía' },
+    { id: 'ess-14', emoji: '🙇', french: 'Désolé(e)', meaning: 'Lo siento', type: 'table', category: 'Cortesía' },
+    { id: 'ess-15', emoji: '🚧', french: 'Pardon', meaning: 'Perdón / Permiso', type: 'table', category: 'Cortesía' },
+    { id: 'ess-16', emoji: '🤧', french: 'À tes souhaits', meaning: 'Jesús/Salud (estornudo)', type: 'table', category: 'Cortesía' },
+    { id: 'ess-17', emoji: '🎂', french: 'Bon anniversaire', meaning: 'Feliz cumpleaños', type: 'table', category: 'Cortesía' },
+    { id: 'ess-18', emoji: '🍀', french: 'Bonne chance', meaning: 'Buena suerte', type: 'table', category: 'Cortesía' },
+    { id: 'ess-19', emoji: '👋', french: 'À tout à l\'heure', meaning: 'Hasta ahora (mismo día)', type: 'table', category: 'Cortesía' },
+    { id: 'ess-20', emoji: '🌅', french: 'À demain', meaning: 'Hasta mañana', type: 'table', category: 'Cortesía' },
+
+    // 3. RESPUESTAS CORTAS (Short Answers)
+    { id: 'ess-21', emoji: '👍', french: 'Carrément', meaning: 'Totalmente / Definitivamente', type: 'table', category: 'Respuestas' },
+    { id: 'ess-22', emoji: '👌', french: 'C\'est nickel', meaning: 'Está perfecto / De lujo', type: 'table', category: 'Respuestas' },
+    { id: 'ess-23', emoji: '🤔', french: 'C\'est bizarre', meaning: 'Es raro', type: 'table', category: 'Respuestas' },
+    { id: 'ess-24', emoji: '😐', french: 'Comme ci, comme ça', meaning: 'Más o menos / Así así', type: 'table', category: 'Respuestas' },
+    { id: 'ess-25', emoji: '🤨', french: 'C\'est vrai ?', meaning: '¿En serio? / ¿Es verdad?', type: 'table', category: 'Respuestas' },
+    { id: 'ess-26', emoji: '🙅', french: 'Pas du tout', meaning: 'Para nada', type: 'table', category: 'Respuestas' },
+    { id: 'ess-27', emoji: '🤷', french: 'Je ne sais pas', meaning: 'No lo sé', type: 'table', category: 'Respuestas' },
+    { id: 'ess-28', emoji: '🌭', french: 'J\'ai la dalle', meaning: 'Me muero de hambre (Coloq.)', type: 'table', category: 'Respuestas' },
+    { id: 'ess-29', emoji: '🥵', french: 'Je suis KO', meaning: 'Estoy reventado/a', type: 'table', category: 'Respuestas' },
+    { id: 'ess-30', emoji: '😨', french: 'C\'est chaud', meaning: 'Está complicado / Es difícil', type: 'table', category: 'Respuestas' },
+
+    // 4. CONECTORES DE CALLE (Street Connectors)
+    { id: 'ess-31', emoji: '🛑', french: 'Arrête !', meaning: '¡Para ya!', type: 'table', category: 'Frases Útiles' },
+    { id: 'ess-32', emoji: '📱', french: 'Envoie-moi ça', meaning: 'Mándame eso', type: 'table', category: 'Frases Útiles' },
+    { id: 'ess-33', emoji: '📍', french: 'T\'es où ?', meaning: '¿Dónde estás?', type: 'table', category: 'Frases Útiles' },
+    { id: 'ess-34', emoji: '⌚', french: 'On se voit quand ?', meaning: '¿Cuándo nos vemos?', type: 'table', category: 'Frases Útiles' },
+    { id: 'ess-35', emoji: '🍻', french: 'On prend un verre ?', meaning: '¿Tomamos algo?', type: 'table', category: 'Frases Útiles' },
+    { id: 'ess-36', emoji: '💰', french: 'C\'est cher', meaning: 'Es caro', type: 'table', category: 'Frases Útiles' },
+    { id: 'ess-37', emoji: '🆓', french: 'C\'est gratuit', meaning: 'Es gratis', type: 'table', category: 'Frases Útiles' },
+    { id: 'ess-38', emoji: '🚽', french: 'C\'est par où ?', meaning: '¿Por dónde es?', type: 'table', category: 'Frases Útiles' },
+    { id: 'ess-39', emoji: '🧾', french: 'L\'addition, s\'il vous plaît', meaning: 'La cuenta, por favor', type: 'table', category: 'Frases Útiles' },
+    { id: 'ess-40', emoji: '🆘', french: 'Au secours', meaning: 'Socorro / Ayuda', type: 'table', category: 'Frases Útiles' },
+
+    // 5. TIEMPO Y CANTIDAD (Time & Amount)
+    { id: 'ess-41', emoji: '🤏', french: 'Un petit peu', meaning: 'Un poquito', type: 'table', category: 'Precisión' },
+    { id: 'ess-42', emoji: '🧱', french: 'Beaucoup', meaning: 'Mucho', type: 'table', category: 'Precisión' },
+    { id: 'ess-43', emoji: '🚫', french: 'Jamais', meaning: 'Nunca', type: 'table', category: 'Precisión' },
+    { id: 'ess-44', emoji: '♾️', french: 'Toujours', meaning: 'Siempre', type: 'table', category: 'Precisión' },
+    { id: 'ess-45', emoji: '🕰️', french: 'Maintenant', meaning: 'Ahora', type: 'table', category: 'Precisión' },
+    { id: 'ess-46', emoji: '🔜', french: 'Bientôt', meaning: 'Pronto', type: 'table', category: 'Precisión' },
+    { id: 'ess-47', emoji: '🗓️', french: 'La semaine prochaine', meaning: 'La semana que viene', type: 'table', category: 'Precisión' },
+    { id: 'ess-48', emoji: '🌙', french: 'Hier soir', meaning: 'Anoche', type: 'table', category: 'Precisión' },
+    { id: 'ess-49', emoji: '🔢', french: 'Combien ?', meaning: '¿Cuánto(s)?', type: 'table', category: 'Precisión' },
+    { id: 'ess-50', emoji: '⚖️', french: 'C\'est trop', meaning: 'Es demasiado', type: 'table', category: 'Precisión' },
+
+    // 6. SENSACIONES (Feelings)
+    { id: 'ess-51', emoji: '🥶', french: 'J\'ai froid', meaning: 'Tengo frío', type: 'table', category: 'Sensaciones' },
+    { id: 'ess-52', emoji: '🥵', french: 'J\'ai chaud', meaning: 'Tengo calor', type: 'table', category: 'Sensaciones' },
+    { id: 'ess-53', emoji: '🤕', french: 'J\'ai mal', meaning: 'Me duele', type: 'table', category: 'Sensaciones' },
+    { id: 'ess-54', emoji: '😰', french: 'J\'ai peur', meaning: 'Tengo miedo', type: 'table', category: 'Sensaciones' },
+    { id: 'ess-55', emoji: '😴', french: 'Je suis fatigué(e)', meaning: 'Estoy cansado/a', type: 'table', category: 'Sensaciones' },
+    { id: 'ess-56', emoji: '🤢', french: 'J\'ai la nausée', meaning: 'Tengo náuseas', type: 'table', category: 'Sensaciones' },
+    { id: 'ess-57', emoji: '😡', french: 'Je suis énervé(e)', meaning: 'Estoy enfadado/a', type: 'table', category: 'Sensaciones' },
+    { id: 'ess-58', emoji: '🥳', french: 'Je suis content(e)', meaning: 'Estoy contento/a', type: 'table', category: 'Sensaciones' },
+    { id: 'ess-59', emoji: '🧘', french: 'Je suis calme', meaning: 'Estoy tranquilo/a', type: 'table', category: 'Sensaciones' },
+    { id: 'ess-60', emoji: '🔋', french: 'Je suis prêt(e)', meaning: 'Estoy listo/a', type: 'table', category: 'Sensaciones' },
+];
+
+// =====================================================
 // EXPORTED TRACKS COLLECTION
 // =====================================================
 export const TRACKS: Track[] = [
@@ -530,6 +607,16 @@ export const TRACKS: Track[] = [
         color: 'teal',
         deck: PHRASE_ANATOMY_DECK,
         mode: 'anatomy',
+    },
+    {
+        id: 'essentials',
+        title: 'Daily Essentials',
+        titleFr: 'Le Quotidien',
+        icon: 'Zap',
+        description: '60 expresiones vitales para el día a día',
+        color: 'amber',
+        deck: ESSENTIALS_DECK,
+        mode: 'table',
     },
 ];
 
